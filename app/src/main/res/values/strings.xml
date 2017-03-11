@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Android Personal Assistant</string>
+    <string name="checkClothing">Clothing</string>
+    <string name="checkFootwear">Footwear</string>
+    <string name="checkAccessories">Accessories</string>
+    <string name="checkBooks">Books</string>
+    <string name="checkMovies">Movies</string>
+    <string name="checkMusic">Music</string>
+    <string name="checkElectronics">Electronics</string>
+    <string name="checkSoftware">Software</string>
 </resources>
