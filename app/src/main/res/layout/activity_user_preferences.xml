@@ -40,10 +40,20 @@
                 android:hint="Enter your address" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:text="Select your shopping preferences"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -107,9 +117,14 @@
                     android:checked="false" />
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
 
+    <Button
+        android:id="@+id/confirmPreferencesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm Preferences"
+        android:layout_gravity="center"
+        android:ems="15"/>
 
 </LinearLayout>
