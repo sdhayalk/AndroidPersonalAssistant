@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 /**
  * Created by dpkch on 3/10/2017.
+ * Dude 1
  */
 
 public class RegisterActivity  extends AppCompatActivity {
