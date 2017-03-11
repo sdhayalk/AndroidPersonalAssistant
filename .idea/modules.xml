@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidPersonalAssistant-master.iml" filepath="$PROJECT_DIR$/AndroidPersonalAssistant-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidPersonalAssistant.iml" filepath="$PROJECT_DIR$/AndroidPersonalAssistant.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
