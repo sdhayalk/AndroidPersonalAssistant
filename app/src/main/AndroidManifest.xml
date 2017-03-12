@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sahil.androidpersonalassistant">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -34,6 +38,14 @@
         <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="com.example.sahil.androidpersonalassistant.REGISTERACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".UserPreferencesActivity">
+            <intent-filter>
+                <action android:name="com.example.sahil.androidpersonalassistant.USERPREFERENCESACTIVITY" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
