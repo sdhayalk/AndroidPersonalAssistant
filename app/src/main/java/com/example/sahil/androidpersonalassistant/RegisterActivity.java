@@ -1,6 +1,8 @@
 package com.example.sahil.androidpersonalassistant;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,15 +16,20 @@ import android.widget.Toast;
  */
 
 public class RegisterActivity  extends AppCompatActivity {
-    Button registerButton;
+    Button registerButton,backButton;
     String username;
+    SharedPreferences sharedPreferences;
     EditText usernameEditText,passwordEditText,emailEditText,rePasswordEditText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.acitivity_register);
+
         Bundle bundle = getIntent().getExtras();
         username = bundle.getString("username");
+
+        sharedPreferences = getSharedPreferences("PreferencesToCheckIfLoggedIn", Context.MODE_PRIVATE);
+
 
         usernameEditText = (EditText) findViewById(R.id.usernameEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
@@ -43,9 +50,22 @@ public class RegisterActivity  extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Password do not match!", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("username", usernameEditText.getText().toString());
+                    editor.putString("password", passwordEditText.getText().toString());
+                    editor.putBoolean("keepLoggedIn",false);
+                    editor.commit();
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
+            }
+        });
+        backButton=(Button) findViewById(R.id.backButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
             }
         });
 

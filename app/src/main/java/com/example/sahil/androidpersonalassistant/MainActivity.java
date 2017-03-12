@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.remove("username");
                 editor.remove("password");
+                editor.remove("keepLoggedIn");
                 editor.commit();
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);

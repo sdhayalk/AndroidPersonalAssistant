@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -70,12 +71,27 @@
                     android:inputType="textPassword"
                     android:fontFamily="sans-serif"
                     android:hint="Re-Enter Password"/>
-                <Button
-                    android:id="@+id/registerButton"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/passwordEditText"
-                    android:text="REGISTER" />
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentTop="true"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/registerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/passwordEditText"
+                        android:text="REGISTER"
+                        android:layout_weight=".5" />
+                    <Button
+                        android:id="@+id/backButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/passwordEditText"
+                        android:text="BACK"
+                        android:layout_weight=".5" />
+                    </LinearLayout>
                 </LinearLayout>
 
         </LinearLayout>
