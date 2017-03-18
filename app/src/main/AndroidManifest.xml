@@ -42,6 +42,27 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".SuggestRestaurantActivity">
+            <intent-filter>
+                <action android:name="com.example.sahil.androidpersonalassistant.SUGGESTRESTUARANTACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SuggestOfferActivity">
+            <intent-filter>
+                <action android:name="com.example.sahil.androidpersonalassistant.SUGGESTOFFERACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SuggestWeatherActivity">
+            <intent-filter>
+                <action android:name="com.example.sahil.androidpersonalassistant.SUGGESTWEATHERACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".UserPreferencesActivity">
             <intent-filter>

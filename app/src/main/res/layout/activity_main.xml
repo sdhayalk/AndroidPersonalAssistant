@@ -39,5 +39,23 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="207dp" />
+
+    <Button
+        android:text="Weather Suggestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/suggestWeatherButton" />
+
+    <Button
+        android:text="Restaurant  Suggestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/suggestRestaurantButton" />
+
+    <Button
+        android:text="Offer Suggestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/suggestOfferButton" />
 </LinearLayout>

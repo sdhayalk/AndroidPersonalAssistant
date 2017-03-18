@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     String username, password;
     Button signOutButton;
     Button sendNotification;
+    Button buttonWeather,buttonOffer,buttonRestaurant;
     String mainMsg, sideMsg;
 
     RecyclerView recyclerView;
@@ -47,6 +48,28 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("mainMsg", mainMsg);
                 bundle.putString("sideMsg", sideMsg);
                 intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+
+        buttonOffer = (Button) findViewById(R.id.suggestOfferButton);
+        buttonOffer.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SuggestOfferActivity.class);
+                startActivity(intent);
+            }
+        });
+        buttonRestaurant = (Button) findViewById(R.id.suggestRestaurantButton);
+        buttonRestaurant.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
+                startActivity(intent);
+            }
+        });
+        buttonWeather = (Button) findViewById(R.id.suggestWeatherButton);
+        buttonWeather.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SuggestWeatherActivity.class);
                 startActivity(intent);
             }
         });
