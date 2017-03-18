@@ -19,7 +19,7 @@ public class UserPreferencesActivity extends AppCompatActivity implements Locati
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_user_preferences);
 
         Bundle bundle = getIntent().getExtras();
         username = bundle.getString("username");

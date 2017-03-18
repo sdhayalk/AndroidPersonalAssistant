@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     String username, password;
     Button signOutButton;
     Button sendNotification;
-    Button buttonWeather,buttonOffer,buttonRestaurant;
+    Button buttonWeather,buttonOffer,buttonRestaurant, buttonPreferences;
     String mainMsg, sideMsg;
 
     RecyclerView recyclerView;
@@ -52,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        buttonPreferences = (Button) findViewById(R.id.preferencesButton);
+        buttonPreferences.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, UserPreferencesActivity.class);
+                startActivity(intent);
+            }
+        });
         buttonOffer = (Button) findViewById(R.id.suggestOfferButton);
         buttonOffer.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
