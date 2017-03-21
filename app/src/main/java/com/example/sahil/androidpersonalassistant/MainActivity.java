@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     String mainMsg, sideMsg;
     LocationManager locationManager;
     Geocoder geocoder;
+    double latitude, longitude;
     String currentCity;
 
     @Override
@@ -95,8 +99,10 @@ public class MainActivity extends AppCompatActivity {
         buttonWeather = (Button) findViewById(R.id.suggestWeatherButton);
         buttonWeather.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SuggestWeatherActivity.class);
-                startActivity(intent);
+                //get weather data:
+
+//                Intent intent = new Intent(MainActivity.this, SuggestWeatherActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -119,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
 //        Toast.makeText(this, locationData.getCity(), Toast.LENGTH_SHORT).show();
 
         //get weather data:
-        Intent getWeatherDataIntent = new Intent(getApplicationContext(), LocationData.class);
-        startService(getWeatherDataIntent);
+        Intent locationDataIntent = new Intent(getApplicationContext(), LocationData.class);
+        startService(locationDataIntent);
 
     }
 
@@ -132,12 +138,12 @@ public class MainActivity extends AppCompatActivity {
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    double latitude = (double) intent.getExtras().get("latitude");
-                    double longitude = (double) intent.getExtras().get("longitude");
-
+                    latitude = (double) intent.getExtras().get("latitude");
+                    longitude = (double) intent.getExtras().get("longitude");
                     //get city data:
                     GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);
                     currentCity = getWeatherData.getCity();
+                    //Toast.makeText(MainActivity.this, latitude+" "+longitude + currentCity, Toast.LENGTH_SHORT).show();
 
                 }
             };
