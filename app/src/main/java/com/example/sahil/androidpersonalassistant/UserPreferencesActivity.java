@@ -25,7 +25,7 @@ public class UserPreferencesActivity extends AppCompatActivity implements Locati
         username = bundle.getString("username");
         password = bundle.getString("password");
 
-        currentLocationButton = (Button) findViewById(R.id.signOutButton);
+        currentLocationButton = (Button) findViewById(R.id.currentLocationButton);
         currentLocationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //get current address

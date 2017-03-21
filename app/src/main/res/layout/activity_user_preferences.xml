@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#e8e8e8">
+        android:background="#e8e8e8"
+        android:layout_weight=".1">
 
         <TextView
             android:layout_width="match_parent"
@@ -21,16 +22,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        android:layout_weight=".7">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight=".1">
             <Button
                 android:id="@+id/currentLocationButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="4dp"
                 android:background="@drawable/gps" />
 
             <EditText
@@ -40,20 +42,22 @@
                 android:hint="Enter your address" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"
-            android:text="Select your shopping preferences"/>
+            android:orientation="vertical"
+            android:layout_weight=".1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Select your shopping preferences"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_weight=".2">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -62,25 +66,25 @@
                 android:layout_weight="0.5">
                 <CheckBox
                     android:id="@+id/checkClothing"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkClothing"
                     android:checked="true" />
                 <CheckBox
                     android:id="@+id/checkFootwear"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkFootwear"
                     android:checked="false" />
                 <CheckBox
                     android:id="@+id/checkAccessories"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkAccessories"
                     android:checked="false" />
                 <CheckBox
                     android:id="@+id/checkBooks"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkBooks"
                     android:checked="false" />
@@ -93,46 +97,48 @@
                 android:orientation="vertical">
                 <CheckBox
                     android:id="@+id/checkMovies"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkMovies"
                     android:checked="false" />
                 <CheckBox
                     android:id="@+id/checkMusic"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkMusic"
                     android:checked="false" />
                 <CheckBox
                     android:id="@+id/checkElectronics"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkElectronics"
                     android:checked="false" />
                 <CheckBox
                     android:id="@+id/checkSoftware"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkSoftware"
                     android:checked="false" />
             </LinearLayout>
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"
-            android:text="Select your eateries"/>
+            android:orientation="vertical"
+            android:layout_weight=".1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"
+                android:text="Select your eateries"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp">
-
+            android:layout_weight=".3">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -140,13 +146,15 @@
                 android:layout_weight="0.5">
                 <CheckBox
                     android:id="@+id/checkRestaurant"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkRestaurant"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:layout_weight="0.5" />
+
                 <CheckBox
                     android:id="@+id/checkBar"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkBar"
                     android:checked="false" />
@@ -159,26 +167,30 @@
                 android:orientation="vertical">
                 <CheckBox
                     android:id="@+id/checkCafe"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkCafe"
                     android:checked="false" />
                 <CheckBox
                     android:id="@+id/checkMealTakeaway"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/checkMealTakeaway"
                     android:checked="false" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/confirmPreferencesButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirm Preferences"
-        android:layout_gravity="center"
-        android:ems="15"/>
+        android:orientation="vertical"
+        android:layout_weight=".2">
+
+        <Button
+            android:id="@+id/confirmPreferencesButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Preferences"/>
+    </LinearLayout>
 
 </LinearLayout>
