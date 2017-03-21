@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(runtime_permissions())  {}
+        Intent locationDataIntent = new Intent(getApplicationContext(), LocationData.class);
+        startService(locationDataIntent);
 
         geocoder = new Geocoder(this, Locale.getDefault());
 
@@ -103,8 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Intent locationDataIntent = new Intent(getApplicationContext(), LocationData.class);
-        startService(locationDataIntent);
+        Toast.makeText(this, "fsihfdljsf", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onReceive(Context context, Intent intent) {
                     latitude = (double) intent.getExtras().get("latitude");
                     longitude = (double) intent.getExtras().get("longitude");
+                    Log.d("latitude",latitude+"");
                     //get city data:
 //                    GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);
 //                    currentCity = getWeatherData.getCity();
