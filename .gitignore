@@ -42,3 +42,4 @@
 *.jks
 
 *.DS_Store
+app/build.gradle
