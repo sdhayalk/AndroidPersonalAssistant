@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         buttonWeather.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //get weather data:
-
+                Toast.makeText(MainActivity.this, latitude+" "+longitude, Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent(MainActivity.this, SuggestWeatherActivity.class);
 //                startActivity(intent);
             }
@@ -141,9 +141,8 @@ public class MainActivity extends AppCompatActivity {
                     latitude = (double) intent.getExtras().get("latitude");
                     longitude = (double) intent.getExtras().get("longitude");
                     //get city data:
-                    GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);
-                    currentCity = getWeatherData.getCity();
-                    //Toast.makeText(MainActivity.this, latitude+" "+longitude + currentCity, Toast.LENGTH_SHORT).show();
+//                    GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);
+//                    currentCity = getWeatherData.getCity();
 
                 }
             };
