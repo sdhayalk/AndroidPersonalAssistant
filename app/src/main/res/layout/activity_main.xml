@@ -29,41 +29,11 @@
 
     </RelativeLayout>
 
-
-    <Button
-        android:id="@+id/sendNotificationButton"
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Send Notification" />
+        android:layout_height="match_parent"
+        android:id="@+id/listview">
 
-    <Button
-        android:text="Weather Suggestion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/suggestWeatherButton" />
-
-    <Button
-        android:text="Restaurant  Suggestion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/suggestRestaurantButton" />
-
-    <Button
-        android:text="Offer Suggestion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/suggestOfferButton" />
-
-    <Button
-        android:text="User Preferences"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/preferencesButton" />
-
-    <TextView
-        android:text="Weather  Data"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/weatherDataTextView" />
+    </ListView>
 
 </LinearLayout>

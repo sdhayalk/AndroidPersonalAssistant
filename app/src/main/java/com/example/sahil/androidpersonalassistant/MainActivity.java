@@ -14,10 +14,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +55,54 @@ public class MainActivity extends AppCompatActivity {
         mainMsg = "Main Message";
         sideMsg = "Side Message";
 
+
+        /***********************LIST VIEW******************/
+
+        final ListView listview = (ListView) findViewById(R.id.listview);
+        String[] values = new String[] { "OFFERS","RESTAURANTS","WEATHER","USER PREFERENCES","SEND NOTIFICATION"};
+
+        final ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < values.length; ++i) {
+            list.add(values[i]);
+        }
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,
+                android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, final View view,int position, long id) {
+                if(position==0){
+                    Intent intent = new Intent(MainActivity.this, SuggestOfferActivity.class);
+                    startActivity(intent);
+                }
+                else if(position==1){
+                    Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
+                    startActivity(intent);
+                }
+                else if(position==2){
+                    Intent intent = new Intent(MainActivity.this, SuggestWeatherActivity.class);
+                    startActivity(intent);
+                }
+                else if(position==3){
+                    Intent intent = new Intent(MainActivity.this, UserPreferencesActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", username);
+                    bundle.putString("password", password);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+                else if(position==4){
+                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("mainMsg", mainMsg);
+                    bundle.putString("sideMsg", sideMsg);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+            }
+        });
+
+
         signOutButton = (Button) findViewById(R.id.signOutButton);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -59,51 +113,6 @@ public class MainActivity extends AppCompatActivity {
                 editor.commit();
 
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("mainMsg", mainMsg);
-                bundle.putString("sideMsg", sideMsg);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-
-        buttonPreferences = (Button) findViewById(R.id.preferencesButton);
-        buttonPreferences.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, UserPreferencesActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("username", username);
-                bundle.putString("password", password);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
-        buttonOffer = (Button) findViewById(R.id.suggestOfferButton);
-        buttonOffer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SuggestOfferActivity.class);
-                startActivity(intent);
-            }
-        });
-        buttonRestaurant = (Button) findViewById(R.id.suggestRestaurantButton);
-        buttonRestaurant.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
-                startActivity(intent);
-            }
-        });
-        buttonWeather = (Button) findViewById(R.id.suggestWeatherButton);
-        buttonWeather.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SuggestWeatherActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        sendNotification = (Button) findViewById(R.id.sendNotificationButton);
-        sendNotification.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("mainMsg", mainMsg);
                 bundle.putString("sideMsg", sideMsg);
@@ -174,5 +183,28 @@ public class MainActivity extends AppCompatActivity {
                 runtime_permissions();
             }
         }
+    }
+
+    private class StableArrayAdapter extends ArrayAdapter<String> {
+        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+
+        public StableArrayAdapter(Context context, int textViewResourceId,
+                                  List<String> objects) {
+            super(context, textViewResourceId, objects);
+            for (int i = 0; i < objects.size(); ++i) {
+                mIdMap.put(objects.get(i), i);
+            }
+        }
+        @Override
+        public long getItemId(int position) {
+            String item = getItem(position);
+            return mIdMap.get(item);
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
     }
 }
