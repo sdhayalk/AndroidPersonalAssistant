@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class UserPreferencesActivity extends AppCompatActivity implements LocationListener{
     String username, password;
@@ -22,16 +23,20 @@ public class UserPreferencesActivity extends AppCompatActivity implements Locati
         setContentView(R.layout.activity_user_preferences);
 
         Bundle bundle = getIntent().getExtras();
-        username = bundle.getString("username");
-        password = bundle.getString("password");
+        try {
+            username = bundle.getString("username");
+            password = bundle.getString("password");
+        }catch(Exception e) {
+            Toast.makeText(this, "Cannot get username and password", Toast.LENGTH_SHORT).show();
+        }
 
-        currentLocationButton = (Button) findViewById(R.id.signOutButton);
+
+        currentLocationButton = (Button) findViewById(R.id.currentLocationButton);
         currentLocationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //get current address
                 //referred from: http://javapapers.com/android/get-current-location-in-android/
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
             }
         });
 
