@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     String mainMsg, sideMsg;
     LocationManager locationManager;
     Geocoder geocoder;
+    String currentCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         buttonPreferences.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, UserPreferencesActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("username", username);
+                bundle.putString("password", password);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -132,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //get city data:
                     GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);
+                    currentCity = getWeatherData.getCity();
 
                 }
             };
