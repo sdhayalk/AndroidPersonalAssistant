@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(runtime_permissions())  {}
 
+        geocoder = new Geocoder(this, Locale.getDefault());
+
         Bundle bundle = getIntent().getExtras();
         username = bundle.getString("username");
         password = bundle.getString("password");
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
     @Override
     protected void onResume() {
         super.onResume();
@@ -124,13 +127,19 @@ public class MainActivity extends AppCompatActivity {
             broadcastReceiver = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    Toast.makeText(MainActivity.this, intent.getExtras().get("latitude") + "", Toast.LENGTH_SHORT).show();
+                    double latitude = (double) intent.getExtras().get("latitude");
+                    double longitude = (double) intent.getExtras().get("longitude");
+
+                    //get city data:
+                    GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);
+
                 }
             };
         }
         registerReceiver(broadcastReceiver, new IntentFilter("LocationUpdate"));
     }
 
+    //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -138,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
             unregisterReceiver(broadcastReceiver);
     }
 
+    //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
     boolean runtime_permissions()   {
         if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)   {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
@@ -146,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

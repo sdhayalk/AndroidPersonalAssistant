@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 
+//referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
 public class LocationData extends Service{
     LocationManager locationManager;
     LocationListener locationListener;
@@ -24,6 +25,7 @@ public class LocationData extends Service{
 
     @Override
     public void onCreate() {
+        //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
