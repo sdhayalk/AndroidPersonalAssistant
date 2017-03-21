@@ -28,11 +28,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
+    boolean loadedFlag;
     SharedPreferences sharedPreferences;
     String username, password;
     Button signOutButton;
     Button sendNotification;
-    Button buttonWeather,buttonOffer,buttonRestaurant, buttonPreferences;
+    ListView listview;
+    TextView loadingTextView;
     TextView weatherDataTextView;
     BroadcastReceiver broadcastReceiver;
     String mainMsg, sideMsg;
@@ -45,8 +47,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        loadedFlag = false;
         if(runtime_permissions())  {}
+        listview = (ListView) findViewById(R.id.listview);
+        loadingTextView = (TextView) findViewById(R.id.loadingTextView);
+
+        //disableAll();
+
+
         Intent locationDataIntent = new Intent(getApplicationContext(), LocationData.class);
         startService(locationDataIntent);
 
@@ -62,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         /***********************LIST VIEW******************/
 
-        final ListView listview = (ListView) findViewById(R.id.listview);
         String[] values = new String[] { "OFFERS","RESTAURANTS","WEATHER","USER PREFERENCES","SEND NOTIFICATION"};
 
         final ArrayList<String> list = new ArrayList<String>();
@@ -106,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this, "fsihfdljsf", Toast.LENGTH_SHORT).show();
+        //while(!listview.isEnabled())    {}
+        Toast.makeText(this, latitude+"", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -121,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     latitude = (double) intent.getExtras().get("latitude");
                     longitude = (double) intent.getExtras().get("longitude");
                     Log.d("latitude",latitude+"");
+                    enableAll();
                     //get city data:
 //                    GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);
 //                    currentCity = getWeatherData.getCity();
@@ -137,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if(broadcastReceiver != null)
             unregisterReceiver(broadcastReceiver);
+    }
+
+    public void disableAll()  {
+        listview.setEnabled(false);
+    }
+
+    public void enableAll() {
+        listview.setEnabled(true);
+        loadingTextView.setEnabled(false);
     }
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
