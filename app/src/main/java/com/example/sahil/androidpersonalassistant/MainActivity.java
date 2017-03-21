@@ -1,10 +1,17 @@
 package com.example.sahil.androidpersonalassistant;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Geocoder;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -20,12 +27,17 @@ public class MainActivity extends AppCompatActivity {
     Button sendNotification;
     Button buttonWeather,buttonOffer,buttonRestaurant, buttonPreferences;
     TextView weatherDataTextView;
+    BroadcastReceiver broadcastReceiver;
     String mainMsg, sideMsg;
+    LocationManager locationManager;
+    Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(runtime_permissions())  {}
 
         Bundle bundle = getIntent().getExtras();
         username = bundle.getString("username");
@@ -93,12 +105,57 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //get city data:
+//        geocoder = new Geocoder(this, Locale.getDefault());
+//        LocationData locationData = new LocationData(geocoder, 33.4255, -111.9400);
+//        locationData.getCity();
+//        Toast.makeText(this, locationData.getCity(), Toast.LENGTH_SHORT).show();
+
         //get weather data:
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        LocationData locationData = new LocationData(geocoder, 33.4255, -111.9400);
-        locationData.getCity();
-        Toast.makeText(this, locationData.getCity(), Toast.LENGTH_SHORT).show();
+        Intent getWeatherDataIntent = new Intent(getApplicationContext(), LocationData.class);
+        startService(getWeatherDataIntent);
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(broadcastReceiver == null)   {
+            broadcastReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    Toast.makeText(MainActivity.this, intent.getExtras().get("latitude") + "", Toast.LENGTH_SHORT).show();
+                }
+            };
+        }
+        registerReceiver(broadcastReceiver, new IntentFilter("LocationUpdate"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(broadcastReceiver != null)
+            unregisterReceiver(broadcastReceiver);
+    }
+
+    boolean runtime_permissions()   {
+        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)   {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 100){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)    {
+
+            }
+            else    {
+                runtime_permissions();
+            }
+        }
     }
 }
