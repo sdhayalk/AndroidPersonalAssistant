@@ -3,13 +3,15 @@ package com.example.sahil.androidpersonalassistant;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
@@ -17,10 +19,8 @@ public class MainActivity extends AppCompatActivity {
     Button signOutButton;
     Button sendNotification;
     Button buttonWeather,buttonOffer,buttonRestaurant, buttonPreferences;
+    TextView weatherDataTextView;
     String mainMsg, sideMsg;
-
-    RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +93,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        //get weather data:
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        LocationData locationData = new LocationData(geocoder, 33.4255, -111.9400);
+        locationData.getCity();
+        Toast.makeText(this, locationData.getCity(), Toast.LENGTH_SHORT).show();
+
 
     }
 }
