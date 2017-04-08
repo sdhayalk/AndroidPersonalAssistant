@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(position==1){
                     Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("longitude", longitude);
                     startActivity(intent);
                 }
                 else if(position==2){

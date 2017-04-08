@@ -8,9 +8,15 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class SuggestWeatherActivity  extends AppCompatActivity {
-
+    String latitude, longitude;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_weather);
+
+        Bundle bundle = getIntent().getExtras();
+        latitude = bundle.getString("latitude");
+        longitude = bundle.getString("longitude");
+
+        
     }
 }
