@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onReceive(Context context, Intent intent) {
                     latitude = (double) intent.getExtras().get("latitude");
                     longitude = (double) intent.getExtras().get("longitude");
-                    Log.d("latitude",latitude+"");
+//                    Log.d("latitude",latitude+"");
                     enableAll();
                     //get city data:
 //                    GetWeatherData getWeatherData = new GetWeatherData(geocoder, latitude, latitude);

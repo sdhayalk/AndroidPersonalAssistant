@@ -18,20 +18,20 @@ import org.json.JSONObject;
 
 public class RestaurantJSONParser {
     public List<HashMap<String,String>> parse(JSONObject jsonObject){
-        JSONArray jsonPlaces = null;
+        JSONArray jsonArrayPlaces = null;
         try {
-            jsonPlaces = jsonObject.getJSONArray("results");
+            jsonArrayPlaces = jsonObject.getJSONArray("results");
         } catch (JSONException e) {e.printStackTrace();}
-        return getPlaces(jsonPlaces);
+        return getPlaces(jsonArrayPlaces);
     }
 
-    private List<HashMap<String, String>> getPlaces(JSONArray jsonPlaces){
+    private List<HashMap<String, String>> getPlaces(JSONArray jsonArrayPlaces){
         List<HashMap<String, String>> placesList = new ArrayList<HashMap<String,String>>();
         HashMap<String, String> place = null;
 
-        for(int i=0; i<jsonPlaces.length() ;i++){
+        for(int i=0 ; i<jsonArrayPlaces.length() ; i++){
             try {
-                place = getPlace((JSONObject)jsonPlaces.get(i));
+                place = getPlace((JSONObject)jsonArrayPlaces.get(i));
                 placesList.add(place);
             } catch (JSONException e) {e.printStackTrace();}
         }
