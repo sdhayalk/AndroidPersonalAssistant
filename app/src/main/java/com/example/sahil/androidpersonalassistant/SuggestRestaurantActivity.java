@@ -1,5 +1,5 @@
 package com.example.sahil.androidpersonalassistant;
-//API KEY = AIzaSyC9DPrKxCdeks5JDuSW8l7mxt3iDyaTCuc
+//API KEY = AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo
 import android.app.Dialog;
 import android.location.Location;
 import android.location.LocationListener;
@@ -30,7 +30,7 @@ import java.util.List;
 public class SuggestRestaurantActivity extends AppCompatActivity implements LocationListener {
     // use this class for Weather Suggestions
     double latitude, longitude;
-    String API_KEY = "AIzaSyC9DPrKxCdeks5JDuSW8l7mxt3iDyaTCuc";
+    String API_KEY = "AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,11 +88,11 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
             sb.append("&radius=2000");
             sb.append("&types="+type);
             sb.append("&sensor=true");
-            sb.append("&key=AIzaSyC9DPrKxCdeks5JDuSW8l7mxt3iDyaTCuc");
+            sb.append("&key=AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo");
 
             // Creating a new non-ui thread task to download Google place json data
             PlacesTask placesTask = new PlacesTask();
-
+            Log.d("In OnCreate", sb.toString());
             // Invokes the "doInBackground()" method of the class PlaceTask
             placesTask.execute(sb.toString());
         }
@@ -105,6 +105,7 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
         protected String doInBackground(String... url) {
             try{
                 data = downloadUrl(url[0]);
+                Log.d("Data size", data.length()+"");
             }catch(Exception e){e.printStackTrace();}
             return data;
         }
