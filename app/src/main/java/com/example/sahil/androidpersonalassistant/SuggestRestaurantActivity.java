@@ -1,12 +1,23 @@
 package com.example.sahil.androidpersonalassistant;
 //API KEY = AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo
+
+/*
+ *  referred from:
+ */
 import android.app.Dialog;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -20,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +43,7 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
     // use this class for Weather Suggestions
     double latitude, longitude;
     String API_KEY = "AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo";
+    ListView restaurantListView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +107,9 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
             Log.d("In OnCreate", sb.toString());
             placesTask.execute(sb.toString());
         }
+
+        restaurantListView = (ListView) findViewById(R.id.restaurantListView);
+
     }
 
     private class PlacesTask extends AsyncTask<String, Integer, String> {
@@ -156,7 +172,30 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
         @Override
         protected void onPostExecute(List<HashMap<String,String>> list){
             //display here as ListView
-            Toast.makeText(SuggestRestaurantActivity.this, list.size()+"listsize", Toast.LENGTH_SHORT).show();
+            final List<String> restaurantName = new ArrayList<String>();
+            final List<String> restaurantAddress = new ArrayList<String>();
+
+            for(int i=0 ; i<list.size() ; i++)  {
+                HashMap<String, String> hashMap = list.get(i);
+                restaurantName.add(hashMap.get("place_name"));
+                restaurantAddress.add(hashMap.get("vicinity"));
+            }
+
+            //referred from : https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
+            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(SuggestRestaurantActivity.this, android.R.layout.simple_list_item_2, android.R.id.text1, restaurantName)   {
+                @NonNull
+                @Override
+                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+                    TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                    TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+                    text1.setText(restaurantName.get(position));
+                    text2.setText(restaurantAddress.get(position));
+                    return view;
+                }
+            };
+            restaurantListView.setAdapter(itemsAdapter);
         }
     }
 
