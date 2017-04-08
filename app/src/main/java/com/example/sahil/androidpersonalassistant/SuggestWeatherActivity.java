@@ -13,10 +13,8 @@ public class SuggestWeatherActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_weather);
 
-        Bundle bundle = getIntent().getExtras();
-        latitude = bundle.getString("latitude");
-        longitude = bundle.getString("longitude");
 
-        
+
+
     }
 }

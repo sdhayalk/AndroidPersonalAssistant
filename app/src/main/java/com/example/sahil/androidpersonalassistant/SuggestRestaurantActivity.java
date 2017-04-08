@@ -9,8 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 
 public class SuggestRestaurantActivity extends AppCompatActivity {
     // use this class for Weather Suggestions
+
+    String latitude, longitude;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_restaurant);
+
+        Bundle bundle = getIntent().getExtras();
+        latitude = bundle.getString("latitude");
+        longitude = bundle.getString("longitude");
     }
 }
