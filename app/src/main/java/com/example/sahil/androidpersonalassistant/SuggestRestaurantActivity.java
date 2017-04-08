@@ -90,15 +90,12 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
             sb.append("&sensor=true");
             sb.append("&key=AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo");
 
-            // Creating a new non-ui thread task to download Google place json data
             PlacesTask placesTask = new PlacesTask();
             Log.d("In OnCreate", sb.toString());
-            // Invokes the "doInBackground()" method of the class PlaceTask
             placesTask.execute(sb.toString());
         }
     }
 
-    /** A class, to download Google Places */
     private class PlacesTask extends AsyncTask<String, Integer, String> {
         String data = null;
         @Override
@@ -117,7 +114,6 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
         }
     }
 
-    /** A method to download json data from url */
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
@@ -144,16 +140,15 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
         return data;
     }
 
-    /** A class to parse the Google Places in JSON format */
     private class ParserTask extends AsyncTask<String, Integer, List<HashMap<String,String>>>{
-        JSONObject jObject;
+        JSONObject jsonObject;
         @Override
         protected List<HashMap<String,String>> doInBackground(String... jsonData) {
             List<HashMap<String, String>> places = null;
             RestaurantJSONParser restaurantJSONParser = new RestaurantJSONParser();
             try{
-                jObject = new JSONObject(jsonData[0]);
-                places = restaurantJSONParser.parse(jObject);
+                jsonObject = new JSONObject(jsonData[0]);
+                places = restaurantJSONParser.parse(jsonObject);
             }catch(Exception e){e.printStackTrace();}
             return places;
         }
