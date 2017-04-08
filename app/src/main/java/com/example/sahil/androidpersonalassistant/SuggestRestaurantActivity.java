@@ -2,7 +2,9 @@ package com.example.sahil.androidpersonalassistant;
 //API KEY = AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo
 
 /*
- *  referred from:
+ *  referred from: http://wptrafficanalyzer.in/blog/showing-nearby-places-and-place-details-using-google-places-api-and-google-maps-android-api-v2/
+ *  we modify the code to consider only restaurants. Also, we have listview instead of google maps so that the user is comfortable to get the address
+ *  
  */
 import android.app.Dialog;
 import android.location.Location;
