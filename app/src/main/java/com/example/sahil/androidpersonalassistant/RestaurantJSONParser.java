@@ -1,6 +1,7 @@
 package com.example.sahil.androidpersonalassistant;
 /*
- * Referred from:
+ * Referred from: http://wptrafficanalyzer.in/blog/showing-nearby-places-and-place-details-using-google-places-api-and-google-maps-android-api-v2/
+ * We will use only restuarants from the various list of places given by Google Places API
  */
 
 
