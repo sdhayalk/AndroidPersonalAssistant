@@ -67,7 +67,7 @@ public class ShowOnMap extends AppCompatActivity implements GoogleMap.OnMyLocati
         //mMap.setOnMyLocationButtonClickListener(this);
         mMap.addMarker(currentOptions);
         mMap.addMarker(resOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 13));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 13.5f));
         enableMyLocation();
     }
 
