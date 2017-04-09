@@ -14,6 +14,8 @@ package com.example.sahil.androidpersonalassistant;
 //ba9dbcf0825b6b4ab154b6feb19442e8591a83ef
 
 import android.app.Dialog;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -25,12 +27,16 @@ import com.example.sahil.androidpersonalassistant.WeatherService.WeatherServiceU
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Created by SAHIL on 4/08/2017.
  */
 
 public class SuggestWeatherActivity  extends AppCompatActivity implements WeatherServiceCallback {
     double latitude, longitude;
+    String currentLocation;
     TextView currentTemperatureTextView, currentConditionTextView, currentLocationTextView;
     WeatherServiceUsingYahoo weatherServiceUsingYahoo;
 
@@ -38,12 +44,24 @@ public class SuggestWeatherActivity  extends AppCompatActivity implements Weathe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_weather);
 
+        Bundle bundle = getIntent().getExtras();
+        latitude = bundle.getDouble("latitude");
+        longitude = bundle.getDouble("longitude");
+
+        //referred from: http://stackoverflow.com/questions/8119369/how-can-i-get-the-current-city-name-in-android
+        try {
+            Geocoder gcd = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0)
+                currentLocation = addresses.get(0).getLocality();
+        } catch (Exception e)   {e.printStackTrace();}
+
         currentTemperatureTextView = (TextView) findViewById(R.id.currentTemperatureTextView);
         currentConditionTextView = (TextView) findViewById(R.id.currentConditionTextView);
-        currentLocationTextView = (TextView) findViewById(R.id.currentLocationButton);
+        currentLocationTextView = (TextView) findViewById(R.id.currentLocationTextView);
 
         weatherServiceUsingYahoo = new WeatherServiceUsingYahoo(this);
-        weatherServiceUsingYahoo.refreshWeather("Austin, TX");
+        weatherServiceUsingYahoo.refreshWeather(currentLocation);
 
     }
 
@@ -52,7 +70,7 @@ public class SuggestWeatherActivity  extends AppCompatActivity implements Weathe
         Item item = channel.getItem();
         currentTemperatureTextView.setText(item.getCondition().getTemperature() + " " + channel.getUnits().getTemperature());
         currentConditionTextView.setText(item.getCondition().getDescription());
-        //currentLocationTextView.setText(weatherServiceUsingYahoo.getLocation());
+        currentLocationTextView.setText(currentLocation);
     }
 
     @Override

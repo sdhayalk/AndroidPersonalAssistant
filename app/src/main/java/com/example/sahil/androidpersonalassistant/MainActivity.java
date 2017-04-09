@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(position==2){
                     Intent intent = new Intent(MainActivity.this, SuggestWeatherActivity.class);
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("longitude", longitude);
                     startActivity(intent);
                 }
                 else if(position==3){
