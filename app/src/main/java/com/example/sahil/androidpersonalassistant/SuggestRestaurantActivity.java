@@ -4,9 +4,10 @@ package com.example.sahil.androidpersonalassistant;
 /*
  *  referred from: http://wptrafficanalyzer.in/blog/showing-nearby-places-and-place-details-using-google-places-api-and-google-maps-android-api-v2/
  *  we modify the code to consider only restaurants. Also, we have listview instead of google maps so that the user is comfortable to get the address
- *  
+ *
  */
 import android.app.Dialog;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -176,11 +178,15 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
             //display here as ListView
             final List<String> restaurantName = new ArrayList<String>();
             final List<String> restaurantAddress = new ArrayList<String>();
+            final List<Double> restaurantLatitude = new ArrayList<Double>();
+            final List<Double> restaurantLongitude = new ArrayList<Double>();
 
             for(int i=0 ; i<list.size() ; i++)  {
                 HashMap<String, String> hashMap = list.get(i);
                 restaurantName.add(hashMap.get("place_name"));
                 restaurantAddress.add(hashMap.get("vicinity"));
+                restaurantLatitude.add(Double.parseDouble(hashMap.get("lat")));
+                restaurantLongitude.add(Double.parseDouble(hashMap.get("lng")));
             }
 
             //referred from : https://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView
@@ -198,6 +204,21 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
                 }
             };
             restaurantListView.setAdapter(itemsAdapter);
+
+            restaurantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Object listItem = restaurantListView.getItemAtPosition(position);
+                    double resLatitude = restaurantLatitude.get(position);
+                    double resLongitude = restaurantLongitude.get(position);
+                    Intent intent = new Intent(SuggestRestaurantActivity.this, ShowOnMap.class);
+                    intent.putExtra("resLatitude", resLatitude);
+                    intent.putExtra("resLongitude", resLongitude);
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("longitude", longitude);
+                    startActivity(intent);
+                }
+            });
         }
     }
 
