@@ -16,6 +16,11 @@ package com.example.sahil.androidpersonalassistant;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
+import com.example.sahil.androidpersonalassistant.WeatherData.Channel;
+import com.example.sahil.androidpersonalassistant.WeatherService.WeatherServiceCallback;
+import com.example.sahil.androidpersonalassistant.WeatherService.WeatherServiceUsingYahoo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
@@ -23,12 +28,31 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
  * Created by SAHIL on 4/08/2017.
  */
 
-public class SuggestWeatherActivity  extends AppCompatActivity {
+public class SuggestWeatherActivity  extends AppCompatActivity implements WeatherServiceCallback {
     double latitude, longitude;
+    TextView currentTemperatureTextView, currentConditionTextView, currentLocationTextView;
+    WeatherServiceUsingYahoo weatherServiceUsingYahoo;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_weather);
 
+        currentTemperatureTextView = (TextView) findViewById(R.id.currentTemperatureTextView);
+        currentConditionTextView = (TextView) findViewById(R.id.currentConditionTextView);
+        currentLocationTextView = (TextView) findViewById(R.id.currentLocationButton);
 
+        weatherServiceUsingYahoo = new WeatherServiceUsingYahoo(this);
+        weatherServiceUsingYahoo.refreshWeather("Austin, TX");
+
+    }
+
+    @Override
+    public void successfullService(Channel channel) {
+
+    }
+
+    @Override
+    public void unsuccessfullService(Exception exception) {
+        exception.printStackTrace();
     }
 }
