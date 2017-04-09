@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.example.sahil.androidpersonalassistant.WeatherData.Channel;
+import com.example.sahil.androidpersonalassistant.WeatherData.Item;
 import com.example.sahil.androidpersonalassistant.WeatherService.WeatherServiceCallback;
 import com.example.sahil.androidpersonalassistant.WeatherService.WeatherServiceUsingYahoo;
 import com.google.android.gms.common.ConnectionResult;
@@ -48,7 +49,10 @@ public class SuggestWeatherActivity  extends AppCompatActivity implements Weathe
 
     @Override
     public void successfullService(Channel channel) {
-
+        Item item = channel.getItem();
+        currentTemperatureTextView.setText(item.getCondition().getTemperature() + " " + channel.getUnits().getTemperature());
+        currentConditionTextView.setText(item.getCondition().getDescription());
+        //currentLocationTextView.setText(weatherServiceUsingYahoo.getLocation());
     }
 
     @Override

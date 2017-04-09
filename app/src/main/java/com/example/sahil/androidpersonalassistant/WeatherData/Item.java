@@ -18,4 +18,8 @@ public class Item implements JSONPopulatorClass {
         condition = new Condition();
         condition.populate(jsonObject.optJSONObject("condition"));
     }
+
+    public Condition getCondition() {
+        return condition;
+    }
 }
