@@ -37,7 +37,7 @@ import java.util.Locale;
 public class SuggestWeatherActivity  extends AppCompatActivity implements WeatherServiceCallback {
     double latitude, longitude;
     String currentLocation;
-    TextView currentTemperatureTextView, currentConditionTextView, currentLocationTextView;
+    TextView currentTemperatureTextView, currentConditionTextView, currentLocationTextView, currentHumidityTextView, currentPressureTextView, currentRisingTextView, currentVisibilityTextView;
     WeatherServiceUsingYahoo weatherServiceUsingYahoo;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,10 @@ public class SuggestWeatherActivity  extends AppCompatActivity implements Weathe
         currentTemperatureTextView = (TextView) findViewById(R.id.currentTemperatureTextView);
         currentConditionTextView = (TextView) findViewById(R.id.currentConditionTextView);
         currentLocationTextView = (TextView) findViewById(R.id.currentLocationTextView);
+        currentHumidityTextView = (TextView) findViewById(R.id.currentHumidityTextView);
+        currentPressureTextView = (TextView) findViewById(R.id.currentPressureTextView);
+        currentRisingTextView = (TextView) findViewById(R.id.currentRisingTextView);
+        currentVisibilityTextView = (TextView) findViewById(R.id.currentVisibilityTextView);
 
         weatherServiceUsingYahoo = new WeatherServiceUsingYahoo(this);
         weatherServiceUsingYahoo.refreshWeather(currentLocation);
@@ -71,6 +75,10 @@ public class SuggestWeatherActivity  extends AppCompatActivity implements Weathe
         currentTemperatureTextView.setText(item.getCondition().getTemperature() + " " + channel.getUnits().getTemperature());
         currentConditionTextView.setText(item.getCondition().getDescription());
         currentLocationTextView.setText(currentLocation);
+        currentHumidityTextView.setText(channel.getAtmosphere().getHumidity());
+        currentPressureTextView.setText(channel.getAtmosphere().getPressure());
+        currentRisingTextView.setText(channel.getAtmosphere().getRising());
+        currentVisibilityTextView.setText(channel.getAtmosphere().getVisibility());
     }
 
     @Override

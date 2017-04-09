@@ -15,6 +15,7 @@ import org.json.JSONObject;
 public class Channel implements JSONPopulatorClass {
     Item item;
     Units units;
+    Atmosphere atmosphere;
 
     @Override
     public void populate(JSONObject jsonObject) {
@@ -23,6 +24,9 @@ public class Channel implements JSONPopulatorClass {
 
         units = new Units();
         units.populate(jsonObject.optJSONObject("units"));
+
+        atmosphere = new Atmosphere();
+        atmosphere.populate(jsonObject.optJSONObject("atmosphere"));
     }
 
     public Item getItem() {
@@ -32,4 +36,6 @@ public class Channel implements JSONPopulatorClass {
     public Units getUnits() {
         return units;
     }
+
+    public Atmosphere getAtmosphere() { return atmosphere; }
 }

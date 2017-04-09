@@ -8,6 +8,7 @@ package com.example.sahil.androidpersonalassistant.WeatherService;
  */
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.example.sahil.androidpersonalassistant.WeatherData.Channel;
 
@@ -45,6 +46,7 @@ public class WeatherServiceUsingYahoo {
 
                 try {
                     URL url = new URL(endpoint);
+                    Log.d("URL Sent for weather: ", endpoint);
                     URLConnection urlConnection = url.openConnection();
                     InputStream inputStream = urlConnection.getInputStream();
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
