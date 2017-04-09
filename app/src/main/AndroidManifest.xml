@@ -83,6 +83,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ShowOnMap">
+            <intent-filter>
+                <action android:name="com.example.sahil.androidpersonalassistant.SHOWONMAP" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".NotificationView" >
         </activity>
 

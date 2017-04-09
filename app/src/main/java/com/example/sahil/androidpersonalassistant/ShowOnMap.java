@@ -8,35 +8,66 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by SAHIL on 07-04-2017.
  */
 
-//referred from : https://github.com/googlemaps/android-samples/blob/master/ApiDemos/app/src/main/java/com/example/mapdemo/MyLocationDemoActivity.java
+/*
+ * referred from : https://github.com/googlemaps/android-samples/blob/master/ApiDemos/app/src/main/java/com/example/mapdemo/MyLocationDemoActivity.java
+ * referred from : http://wptrafficanalyzer.in/blog/adding-marker-at-user-input-latitude-and-longitude-in-google-map-android-api-v2/
+ *
+ * Using the above references, we modity the code to include two markers on the map, one corresponding
+ * to user's current position and the other corresponding to the selected restaurant's position
+ *
+ */
 
 public class ShowOnMap extends AppCompatActivity implements GoogleMap.OnMyLocationButtonClickListener, OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private boolean mPermissionDenied = false;
-
     private GoogleMap mMap;
+    double latitude, longitude, resLatitude, resLongitude;
+    LatLng currentLatLng, resLatLng;
+    MarkerOptions currentOptions, resOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.my_location_demo);
+        setContentView(R.layout.activity_map);
 
-        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        //mapFragment.getMapAsync(this);
+        Bundle bundle = getIntent().getExtras();
+        latitude = bundle.getDouble("latitude");
+        longitude = bundle.getDouble("longitude");
+        resLatitude = bundle.getDouble("resLatitude");
+        resLongitude = bundle.getDouble("resLongitude");
+
+        currentLatLng = new LatLng(latitude, longitude);
+        resLatLng = new LatLng(resLatitude, resLongitude);
+
+        currentOptions = new MarkerOptions();
+        currentOptions.position(currentLatLng);
+        resOptions = new MarkerOptions();
+        resOptions.position(resLatLng);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-        mMap.setOnMyLocationButtonClickListener(this);
+        //mMap.setOnMyLocationButtonClickListener(this);
+        mMap.addMarker(currentOptions);
+        mMap.addMarker(resOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 13));
         enableMyLocation();
     }
 
