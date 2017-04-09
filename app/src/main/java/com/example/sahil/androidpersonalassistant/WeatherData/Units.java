@@ -11,8 +11,14 @@ import org.json.JSONObject;
  */
 
 public class Units implements JSONPopulatorClass {
+    String temperature;
+
     @Override
     public void populate(JSONObject jsonObject) {
+        temperature = jsonObject.optString("temperature");
+    }
 
+    public String getTemperature() {
+        return temperature;
     }
 }

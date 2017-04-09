@@ -11,8 +11,11 @@ import org.json.JSONObject;
  */
 
 public class Item implements JSONPopulatorClass {
+    Condition condition;
+
     @Override
     public void populate(JSONObject jsonObject) {
-
+        condition = new Condition();
+        condition.populate(jsonObject.optJSONObject("condition"));
     }
 }
