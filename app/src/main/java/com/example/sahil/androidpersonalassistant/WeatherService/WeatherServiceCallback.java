@@ -1,7 +1,10 @@
 package com.example.sahil.androidpersonalassistant.WeatherService;
 
 /*
- * referred from: https://www.youtube.com/watch?v=FkT1kwtYSFU&t=955s
+ * referred from : https://www.youtube.com/watch?v=FkT1kwtYSFU
+ * referred from : https://www.youtube.com/watch?v=dUKJN_KCK6U
+ * referred from : https://www.youtube.com/watch?v=gJ9Ny_J3tcM
+ *
  */
 
 import com.example.sahil.androidpersonalassistant.WeatherData.Channel;
