@@ -49,7 +49,6 @@ public class PersonalizationService extends Service {
     @Override
     public void onStart(Intent intent, int startId) {
         Toast.makeText(this, " MyService Started", Toast.LENGTH_SHORT).show();
-        Log.d("Started", "started");
 
         checkForFileAndFolder();
 
