@@ -8,28 +8,25 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
-
 import java.io.File;
 
-
-/**
+/*
  * Created by dpkch on 4/11/2017.
  */
-
 
 public class CollectData extends Service {
     String username, password;
     SQLiteDatabase db;
-    //public static final String DATABASE_NAME = "personalization.db";
-    //public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "Mydata";
-    //public final String FILE_PATH = getFilesDir().toString();
-    //public final String DATABASE_LOCATION = FILE_PATH + File.separator + DATABASE_NAME;
+    public String TABLE = "personalization";
+    public static final String DATABASE_NAME = "group13";
+    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "Mydata";
+    public static final String DATABASE_LOCATION = FILE_PATH + File.separator + DATABASE_NAME;
     public CollectData() {
 
     }
     @Override
     public void onCreate(){
-        //createDB();
+        createDB();
         //addDataToDB();
     }
     @Override
@@ -45,34 +42,37 @@ public class CollectData extends Service {
    public void addDataToDB(){
        try {
            //perform your database operations here ...
-          // db.beginTransaction();
-           db.execSQL( "insert into tbl_"+ username+"(param1, param2, param3) values ('"+1+"', '"+2+"', '"+3+"' );" );
-           //db.setTransactionSuccessful(); //commit your changes
+           db.beginTransaction();
+           db.execSQL( "insert into tbl_"+ TABLE+"(param1, param2, param3) values ('"+1+"', '"+2+"', '"+3+"' );" );
+           db.setTransactionSuccessful(); //commit your changes
+           db.endTransaction(); // end the transaction
        }
        catch (SQLiteException e) {
            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
        }
        finally {
-          // db.endTransaction();
+          db.endTransaction();
        }
    }
 
-   /* public void createDB(){
+    public void createDB(){
         try{
+            File file = new File(DATABASE_LOCATION);
             File folder = new File(FILE_PATH);
             if (!folder.exists()) {
-                folder.mkdirs();
+                folder.mkdir();
             }
             db = SQLiteDatabase.openOrCreateDatabase(DATABASE_LOCATION, null);
             db.beginTransaction();
             try {
                 //perform your database operations here ...
-                db.execSQL("create table tbl_"+username+" ("
+                db.execSQL("create table tbl_"+TABLE+" ("
                         + " param1 integer, "
                         + " param2 integer, "
                         + " param3 integer ); " );
 
                 db.setTransactionSuccessful(); //commit your changes
+                db.endTransaction();// end transaction
             }
             catch (SQLiteException e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
@@ -84,6 +84,6 @@ public class CollectData extends Service {
 
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
-    }*/
+    }
 }
 

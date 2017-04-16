@@ -1,5 +1,7 @@
 package com.example.sahil.androidpersonalassistant;
 
+import android.*;
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     boolean loadedFlag;
     SharedPreferences sharedPreferences;
     String username, password;
-    Button signOutButton;
+    Button signOutButton; // TODO: sahil to implement
     Button sendNotification;
     ListView listview;
     TextView loadingTextView;
@@ -171,11 +173,19 @@ public class MainActivity extends AppCompatActivity {
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
     boolean runtime_permissions()   {
+        boolean flag=false;
         if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)   {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-            return true;
+            flag= true;
         }
-        return false;
+        if(flag==false){
+                return false;
+        }
+        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)   {
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+            flag= true;
+        }
+        return flag;
     }
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
