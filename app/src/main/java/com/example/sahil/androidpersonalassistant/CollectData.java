@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 import java.io.File;
@@ -21,13 +22,36 @@ public class CollectData extends Service {
     public static final String DATABASE_NAME = "group13";
     public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "Mydata";
     public static final String DATABASE_LOCATION = FILE_PATH + File.separator + DATABASE_NAME;
+    Thread addThread=null;
+    Handler mHandler=new Handler();
     public CollectData() {
 
     }
     @Override
     public void onCreate(){
+
+
         createDB();
-        //addDataToDB();
+        addThread= new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while(true) {
+                        /*mHandler.post(new Runnable(){
+                            public void run(){
+                              Toast.makeText(CollectData.this, "test", Toast.LENGTH_SHORT).show();
+                            }
+                        });*/
+                        addDataToDB();
+                        Thread.sleep(5000);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        addThread.start();
     }
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,23 +59,25 @@ public class CollectData extends Service {
     }
 
     public int onStartCommand (Intent intent, int flags, int startId) {
-        Bundle bundle = intent.getExtras();
-        username = bundle.getString("username");
+        //Bundle bundle = intent.getExtras();
+        //username = bundle.getString("username");
         return START_STICKY;
     }
    public void addDataToDB(){
        try {
            //perform your database operations here ...
            db.beginTransaction();
-           db.execSQL( "insert into tbl_"+ TABLE+"(param1, param2, param3) values ('"+1+"', '"+2+"', '"+3+"' );" );
-           db.setTransactionSuccessful(); //commit your changes
+           db.execSQL( "insert into tbl_"+ TABLE+"( time, location) values ("+"'12:12:05'"+", "+"'LOCATION_A'"+" );" );
+           //db.setTransactionSuccessful(); //commit your changes
            db.endTransaction(); // end the transaction
        }
-       catch (SQLiteException e) {
-           Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-       }
-       finally {
-          db.endTransaction();
+       catch (SQLiteException e) { // can't toast from a service
+           final SQLiteException ee=e;
+           mHandler.post(new Runnable(){
+                public void run(){
+                     Toast.makeText(CollectData.this, ee.getMessage(), Toast.LENGTH_LONG).show();
+                }
+           });
        }
    }
 
@@ -66,19 +92,15 @@ public class CollectData extends Service {
             db.beginTransaction();
             try {
                 //perform your database operations here ...
-                db.execSQL("create table tbl_"+TABLE+" ("
-                        + " param1 integer, "
-                        + " param2 integer, "
-                        + " param3 integer ); " );
+                db.execSQL("create table if not exists tbl_"+TABLE+" ("
+                        + " time TEXT, "
+                        + " location TEXT); " );
 
                 db.setTransactionSuccessful(); //commit your changes
                 db.endTransaction();// end transaction
             }
             catch (SQLiteException e) {
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-            finally {
-                db.endTransaction();
             }
         }catch (SQLException e){
 

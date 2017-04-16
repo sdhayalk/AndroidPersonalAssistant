@@ -2,6 +2,8 @@ package com.example.sahil.androidpersonalassistant;
 
 import android.*;
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +27,13 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -44,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     Geocoder geocoder;
     double latitude, longitude;
     String currentCity;
+    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "APA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
         password = bundle.getString("password");
 
         /* start service to add the personalization data to the DB */
-        Intent serviceIntent = new Intent(MainActivity.this, CollectData.class);
-        serviceIntent.putExtras(bundle);
-        startService(serviceIntent);
+//        Intent serviceIntent = new Intent(MainActivity.this, CollectData.class);
+//        serviceIntent.putExtras(bundle);
+//        startService(serviceIntent);
         /*****/
 
         //disableAll();
@@ -127,8 +137,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //while(!listview.isEnabled())    {}
-        Toast.makeText(this, latitude+"", Toast.LENGTH_SHORT).show();
+
+        //--------------------------STARTING PERSONALIZATION--------------------------//
+
+        /*
+         * referred from: http://www.sanfoundry.com/java-android-program-start-service-every-hour/
+         */
+
+        startService(new Intent(this, PersonalizationService.class));
+        Calendar calendar = Calendar.getInstance();
+        Intent intent = new Intent(this, PersonalizationService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5*1000, pendingIntent);
+                                                                                    // it should be 3600000 for every hour
+
+        try {
+            File folder = new File(FILE_PATH);
+            if (!folder.exists())
+                folder.mkdir();
+
+            File file = new File(FILE_PATH + File.separator + "location.csv");
+            if (!file.exists())
+                file.createNewFile();
+        } catch (Exception e)   {e.printStackTrace();}
+
+//        Calendar calendar = Calendar.getInstance();
+//        Calendar currentCalender = Calendar.getInstance();
+//
+//        calendar.set(Calendar.HOUR_OF_DAY, currentCalender.get(Calendar.HOUR_OF_DAY));
+//        calendar.set(Calendar.MINUTE, currentCalender.get(Calendar.MINUTE)+1);
+//        Toast.makeText(this, currentCalender.get(Calendar.HOUR_OF_DAY) + " "+ (int)(currentCalender.get(Calendar.MINUTE)+1), Toast.LENGTH_SHORT).show();
+//
+//        Intent intent = new Intent(getApplicationContext(), PersonalizationNotificationReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
+//                                                                                    //it should be AlarmManager.INTERVAL_HOUR
+
+        //--------------------------ENDING PERSONALIZATION--------------------------//
 
     }
 
@@ -173,17 +220,14 @@ public class MainActivity extends AppCompatActivity {
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
     boolean runtime_permissions()   {
-        boolean flag=false;
-        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)   {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
-            flag= true;
-        }
-        if(flag==false){
-                return false;
-        }
-        if(Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)   {
-            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
-            flag= true;
+
+        if(Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+            return true;
         }
         return flag;
     }
@@ -193,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == 100){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)    {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED)    {
 
             }
             else    {
@@ -224,4 +268,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 }
