@@ -1,5 +1,7 @@
 package com.example.sahil.androidpersonalassistant;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +25,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -57,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         password = bundle.getString("password");
 
         /* start service to add the personalization data to the DB */
-        Intent serviceIntent = new Intent(MainActivity.this, CollectData.class);
-        serviceIntent.putExtras(bundle);
-        startService(serviceIntent);
+//        Intent serviceIntent = new Intent(MainActivity.this, CollectData.class);
+//        serviceIntent.putExtras(bundle);
+//        startService(serviceIntent);
         /*****/
 
         //disableAll();
@@ -127,6 +130,26 @@ public class MainActivity extends AppCompatActivity {
 
         //while(!listview.isEnabled())    {}
         Toast.makeText(this, latitude+"", Toast.LENGTH_SHORT).show();
+
+
+        //--------------------------STARTING PERSONALIZATION--------------------------//
+
+        /*
+         * referred from: https://www.youtube.com/watch?v=1fV9NmvxXJo
+         * we modify the code so as to perfrom every XX-Hour:00-MInute:00-Secnond
+         */
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 21);
+        calendar.set(Calendar.MINUTE, 54);
+
+        Intent intent = new Intent(getApplicationContext(), PersonalizationNotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
+                                                                                    //it should be AlarmManager.INTERVAL_HOUR
+
+        //--------------------------ENDING PERSONALIZATION--------------------------//
 
     }
 
