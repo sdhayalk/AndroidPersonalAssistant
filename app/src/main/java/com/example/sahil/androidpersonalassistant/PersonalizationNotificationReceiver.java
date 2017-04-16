@@ -21,18 +21,25 @@ public class PersonalizationNotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Intent intent1 = new Intent(context, LoginActivity.class);
-        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 100, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(context)
-                .setContentIntent(pendingIntent)
-                .setSmallIcon(android.R.drawable.arrow_up_float)
-                .setContentTitle("Title of notification")
-                .setContentText("Text of notification")
-                .setAutoCancel(true);
 
-        notificationManager.notify(123, builder.build());
+
+
+
+
+//        //should be notified only when future location will change
+//        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context, 123, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+//        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(context)
+//                .setContentIntent(pendingIntent)
+//                .setSmallIcon(android.R.drawable.arrow_up_float)
+//                .setContentTitle("Title of notification")
+//                .setContentText("Text of notification")
+//                .setAutoCancel(true);
+//
+//        notificationManager.notify(123, builder.build());
     }
 }
