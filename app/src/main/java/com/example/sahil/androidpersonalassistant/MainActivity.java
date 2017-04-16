@@ -220,7 +220,6 @@ public class MainActivity extends AppCompatActivity {
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
     boolean runtime_permissions()   {
-
         if(Build.VERSION.SDK_INT >= 23 &&
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -229,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             return true;
         }
-        return flag;
+        return false;
     }
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
