@@ -97,7 +97,9 @@
 
         <service android:name=".LocationData"/>
         <service android:name=".CollectData"/>
-        <receiver android:name=".PersonalizationNotificationReceiver"/>
+        <service
+            android:name=".PersonalizationService"
+            android:enabled="true" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
