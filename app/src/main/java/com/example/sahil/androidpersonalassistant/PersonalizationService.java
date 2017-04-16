@@ -92,7 +92,6 @@ public class PersonalizationService extends Service {
             if (!file.exists())
                 file.createNewFile();
         } catch (Exception e)   {e.printStackTrace();}
-
     }
 
     public String getCurrentCity(double latitude, double longitude)  {
