@@ -24,6 +24,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -140,13 +142,15 @@ public class MainActivity extends AppCompatActivity {
          */
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 21);
-        calendar.set(Calendar.MINUTE, 54);
+        Calendar currentCalender = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, currentCalender.get(Calendar.HOUR));
+        calendar.set(Calendar.MINUTE, currentCalender.get(Calendar.MINUTE)+1);
 
         Intent intent = new Intent(getApplicationContext(), PersonalizationNotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
                                                                                     //it should be AlarmManager.INTERVAL_HOUR
 
         //--------------------------ENDING PERSONALIZATION--------------------------//
