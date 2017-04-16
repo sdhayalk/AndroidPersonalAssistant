@@ -52,6 +52,16 @@ public class MainActivity extends AppCompatActivity {
         listview = (ListView) findViewById(R.id.listview);
         loadingTextView = (TextView) findViewById(R.id.loadingTextView);
 
+        Bundle bundle = getIntent().getExtras();
+        username = bundle.getString("username");
+        password = bundle.getString("password");
+
+        /* start service to add the personalization data to the DB */
+        Intent serviceIntent = new Intent(MainActivity.this, CollectData.class);
+        serviceIntent.putExtras(bundle);
+        startService(serviceIntent);
+        /*****/
+
         //disableAll();
 
 
@@ -60,9 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         geocoder = new Geocoder(this, Locale.getDefault());
 
-        Bundle bundle = getIntent().getExtras();
-        username = bundle.getString("username");
-        password = bundle.getString("password");
+
         sharedPreferences = getSharedPreferences("PreferencesToCheckIfLoggedIn", Context.MODE_PRIVATE);
         mainMsg = "Main Message";
         sideMsg = "Side Message";
