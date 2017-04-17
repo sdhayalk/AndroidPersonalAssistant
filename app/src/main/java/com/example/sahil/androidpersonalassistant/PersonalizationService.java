@@ -109,6 +109,15 @@ public class PersonalizationService extends Service {
             File file = new File(FILE_PATH_DB + File.separator + "location.csv");
             if (!file.exists())
                 file.createNewFile();
+
+            File myFile = new File(FILE_PATH_DB + File.separator + "latitude.csv");
+            if(!myFile.exists())
+                myFile.createNewFile();
+
+            myFile = new File(FILE_PATH_DB + File.separator + "longitude.csv");
+            if(!myFile.exists())
+                myFile.createNewFile();
+
         } catch (Exception e)   {e.printStackTrace();}
     }
 
@@ -181,15 +190,32 @@ public class PersonalizationService extends Service {
             db.execSQL( "insert into tbl_"+ TABLE+"(hour,day, city,latitude,longitude) values ("+hour+", "+day+", '"+city+"', "+latitude+", "+longitude+" );" );
             db.setTransactionSuccessful(); //commit your changes
 
-            File myFile = new File(FILE_PATH_DB + File.separator + "location.csv");
+            File myFile = new File(FILE_PATH_DB + File.separator + "latitude.csv");
             if(!myFile.exists())
                 myFile.createNewFile();
-
             FileOutputStream fOut = new FileOutputStream(myFile, true);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-            myOutWriter.write("" + hour + "," + day + "," + city + "," + latitude + "," + longitude + "\n");
+            myOutWriter.write("" + hour + "," + day + "," + latitude + "\n");
             myOutWriter.close();
             fOut.close();
+
+            myFile = new File(FILE_PATH_DB + File.separator + "longitude.csv");
+            if(!myFile.exists())
+                myFile.createNewFile();
+            fOut = new FileOutputStream(myFile, true);
+            myOutWriter = new OutputStreamWriter(fOut);
+            myOutWriter.write("" + hour + "," + day + "," + longitude + "\n");
+            myOutWriter.close();
+            fOut.close();
+
+//            myFile = new File(FILE_PATH_DB + File.separator + "latitude.csv");
+//            if(!myFile.exists())
+//                myFile.createNewFile();
+//            FileOutputStream fOut = new FileOutputStream(myFile, true);
+//            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+//            myOutWriter.write("" + hour + "," + day + "," + latitude + "\n");
+//            myOutWriter.close();
+//            fOut.close();
         }
         catch (SQLiteException e) { // can't toast from a service
             final SQLiteException ee=e;

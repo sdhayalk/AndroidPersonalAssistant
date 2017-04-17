@@ -28,6 +28,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.Instance;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -44,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
     String username, password;
     Button signOutButton; // TODO: sahil to implement
     Button sendNotification;
+    Button trainButton, testButton;
     ListView listview;
-    TextView loadingTextView;
     TextView weatherDataTextView;
     BroadcastReceiver broadcastReceiver;
     String mainMsg, sideMsg;
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     Geocoder geocoder;
     double latitude, longitude;
     String currentCity;
-    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "APA";
+    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "Mydata";   //was APA
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         loadedFlag = false;
         if(runtime_permissions())  {}
         listview = (ListView) findViewById(R.id.listview);
-        loadingTextView = (TextView) findViewById(R.id.loadingTextView);
 
         Bundle bundle = getIntent().getExtras();
         username = bundle.getString("username");
@@ -175,6 +177,37 @@ public class MainActivity extends AppCompatActivity {
 //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
 //                                                                                    //it should be AlarmManager.INTERVAL_HOUR
 
+        trainButton = (Button) findViewById(R.id.trainButton);
+        trainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SVM svmLatitude = new SVM();
+                svmLatitude.train(FILE_PATH + File.separator + "latitude.csv", 2);
+                double[] values = new double[] {19, 1};
+                Instance instanceTest = new DenseInstance(values);
+                double predictedLatitude = Double.parseDouble(svmLatitude.test(instanceTest));
+
+                SVM svmLongitude = new SVM();
+                svmLongitude.train(FILE_PATH + File.separator + "longitude.csv", 2);
+                values = new double[] {19, 1};
+                instanceTest = new DenseInstance(values);
+                double predictedLongitude = Double.parseDouble(svmLongitude.test(instanceTest));
+
+                Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
+                intent.putExtra("latitude", predictedLatitude);
+                intent.putExtra("longitude", predictedLongitude);
+                startActivity(intent);
+            }
+        });
+
+        testButton = (Button) findViewById(R.id.testButton);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         //--------------------------ENDING PERSONALIZATION--------------------------//
 
     }
@@ -215,7 +248,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void enableAll() {
         listview.setEnabled(true);
-        loadingTextView.setEnabled(false);
     }
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
