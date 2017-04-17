@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,7 +33,6 @@ import java.util.Locale;
  */
 
 public class PersonalizationService extends Service {
-    public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "APA";
     int hour, day;
     String city;
     double latitude=0, longitude=0;
@@ -78,10 +79,11 @@ public class PersonalizationService extends Service {
                 }
             };
         }
+
         registerReceiver(broadcastReceiver, new IntentFilter("LocationUpdate"));
 
         city = getCurrentCity(latitude, longitude);
-        writetocsv(hour, day, city, latitude, longitude);
+        //writetocsv(hour, day, city, latitude, longitude);
         writetdb(hour, day, city, latitude, longitude);
 
     }
@@ -97,11 +99,11 @@ public class PersonalizationService extends Service {
 
     public void checkForFileAndFolder() {
         try {
-            File folder = new File(FILE_PATH);
+            File folder = new File(FILE_PATH_DB);
             if (!folder.exists())
                 folder.mkdir();
 
-            File file = new File(FILE_PATH + File.separator + "location.csv");
+            File file = new File(FILE_PATH_DB + File.separator + "location.csv");
             if (!file.exists())
                 file.createNewFile();
         } catch (Exception e)   {e.printStackTrace();}
@@ -119,22 +121,22 @@ public class PersonalizationService extends Service {
         return currentLocation;
     }
 
-    public void writetocsv(int hour, int day, String city, double latitude, double longitude) {
-        File file = new File(FILE_PATH + File.separator + "location.csv");
-        try {
-            if(latitude == 0 && longitude == 0) {}
-            else {
-                File myFile = new File(FILE_PATH + File.separator + "location.csv");
-                FileOutputStream fOut = new FileOutputStream(myFile, true);
-                OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-                myOutWriter.append("" + hour + "," + day + "," + city + "," + latitude + "," + longitude + "\n");
-                myOutWriter.close();
-                fOut.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void writetocsv(int hour, int day, String city, double latitude, double longitude) {
+//        File file = new File(FILE_PATH + File.separator + "location.csv");
+//        try {
+//            if(latitude == 0 && longitude == 0) {}
+//            else {
+//                File myFile = new File(FILE_PATH + File.separator + "location.csv");
+//                FileOutputStream fOut = new FileOutputStream(myFile, true);
+//                OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+//                myOutWriter.append("" + hour + "," + day + "," + city + "," + latitude + "," + longitude + "\n");
+//                myOutWriter.close();
+//                fOut.close();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void createDB(){
         try {
@@ -145,7 +147,7 @@ public class PersonalizationService extends Service {
 
         try{
             File file = new File(DATABASE_LOCATION);
-            File folder = new File(FILE_PATH);
+            File folder = new File(FILE_PATH_DB);
             if (!folder.exists()) {
                 folder.mkdir();
             }
@@ -156,6 +158,7 @@ public class PersonalizationService extends Service {
                 String create_table="create table if not exists tbl_"+TABLE+" (hour INTEGER, day INTEGER, city TEXT, latitude REAL, longitude REAL);";
                 db.execSQL(create_table );
                 db.setTransactionSuccessful(); //commit your changes
+
             }
             catch (SQLiteException e) {
                 final SQLiteException ee=e;
@@ -168,6 +171,8 @@ public class PersonalizationService extends Service {
             finally {
                 db.endTransaction();
                 db.close();
+
+
             }
         }
         catch (SQLiteException e) { // can't toast from a service
@@ -190,6 +195,19 @@ public class PersonalizationService extends Service {
             db.beginTransaction();
             db.execSQL( "insert into tbl_"+ TABLE+"(hour,day, city,latitude,longitude) values ("+hour+", "+day+", '"+city+"', "+latitude+", "+longitude+" );" );
             db.setTransactionSuccessful(); //commit your changes
+
+
+            File myFile = new File(FILE_PATH_DB + File.separator + "location.csv");
+            if(!myFile.exists())
+                myFile.createNewFile();
+
+            FileOutputStream fOut = new FileOutputStream(myFile, true);
+            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            Toast.makeText(this, "" + hour + " " + day + " " + city , Toast.LENGTH_SHORT).show();
+            myOutWriter.append("" + hour + "," + day + "," + city + "," + latitude + "," + longitude + "\n");
+            myOutWriter.close();
+            fOut.close();
+
         }
         catch (SQLiteException e) { // can't toast from a service
             final SQLiteException ee=e;
@@ -199,9 +217,12 @@ public class PersonalizationService extends Service {
                 }
             });
         }
+        catch (Exception e) {
+        }
         finally {
             db.endTransaction();
             db.close();
         }
     }
+
 }
