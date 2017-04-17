@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -36,11 +37,12 @@ public class PersonalizationService extends Service {
     int hour, day;
     String city="";
     double latitude=0, longitude=0;
+    SharedPreferences sharedPreferences;
     SQLiteDatabase db;
-    public String TABLE = "new";
-    public static final String DATABASE_NAME = "group13";
-    public static final String FILE_PATH_DB = Environment.getExternalStorageDirectory() + File.separator + "Mydata";
-    public static final String DATABASE_LOCATION = FILE_PATH_DB + File.separator + DATABASE_NAME;
+    public String TABLE = "Personal";
+    public  StringBuilder DATABASE_NAME=new StringBuilder("");
+    public  final String FILE_PATH_DB = Environment.getExternalStorageDirectory() + File.separator + "Mydata";
+    public  StringBuilder DATABASE_LOCATION = new StringBuilder(FILE_PATH_DB + File.separator) ;
     Handler mHandler=new Handler(); // handler for toasting messages form the service
     BroadcastReceiver broadcastReceiver;
     Geocoder geocoder;
@@ -54,6 +56,9 @@ public class PersonalizationService extends Service {
 
     @Override
     public void onCreate() {
+        sharedPreferences = getSharedPreferences("PreferencesToCheckIfLoggedIn", Context.MODE_PRIVATE);
+        DATABASE_NAME.append(sharedPreferences.getString("username", null));
+        DATABASE_LOCATION.append(DATABASE_NAME.toString());
         Toast.makeText(this, " MyService Created ", Toast.LENGTH_SHORT).show();
         checkForFileAndFolder();
         createDB();
@@ -61,7 +66,7 @@ public class PersonalizationService extends Service {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        Toast.makeText(this, " MyService Started", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, " MyService Started", Toast.LENGTH_SHORT).show();
 
         checkForFileAndFolder();
 
@@ -84,7 +89,6 @@ public class PersonalizationService extends Service {
 
         city = getCurrentCity(latitude, longitude);
         writetdb(hour, day, city, latitude, longitude);
-
     }
 
     @Override
@@ -128,12 +132,12 @@ public class PersonalizationService extends Service {
         } catch (Exception e)   {e.printStackTrace();}
 
         try{
-            File file = new File(DATABASE_LOCATION);
+            File file = new File(DATABASE_LOCATION.toString());
             File folder = new File(FILE_PATH_DB);
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            db = SQLiteDatabase.openOrCreateDatabase(DATABASE_LOCATION, null);
+            db = SQLiteDatabase.openOrCreateDatabase(DATABASE_LOCATION.toString(), null);
             db.beginTransaction();
             try {
                 //perform your database operations here ...
@@ -171,7 +175,7 @@ public class PersonalizationService extends Service {
             return;
         }
         try {
-            db = SQLiteDatabase.openOrCreateDatabase(DATABASE_LOCATION, null);
+            db = SQLiteDatabase.openOrCreateDatabase(DATABASE_LOCATION.toString(), null);
             //perform your database operations here ...
             db.beginTransaction();
             db.execSQL( "insert into tbl_"+ TABLE+"(hour,day, city,latitude,longitude) values ("+hour+", "+day+", '"+city+"', "+latitude+", "+longitude+" );" );
