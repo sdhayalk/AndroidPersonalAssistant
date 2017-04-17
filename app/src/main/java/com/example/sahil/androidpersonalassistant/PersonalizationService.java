@@ -171,7 +171,7 @@ public class PersonalizationService extends Service {
     }
 
     public void writetdb(int hour, int day, String city, double latitude, double longitude) {
-        if(latitude == 0 && longitude == 0 && city.equals("")){
+        if((latitude == 0 && longitude == 0) || city.equals("")){
             return;
         }
         try {
