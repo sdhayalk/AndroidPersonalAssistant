@@ -9,8 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-/**
+/*
  * Created by dpkch on 3/10/2017.
  */
 
