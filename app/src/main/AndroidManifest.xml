@@ -92,6 +92,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".CreditsActivity">
+            <intent-filter>
+                <action android:name="com.example.sahil.androidpersonalassistant.CREDITSACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".NotificationView" >
         </activity>
 

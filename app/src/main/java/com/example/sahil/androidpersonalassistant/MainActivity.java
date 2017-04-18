@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     Button signOutButton; // TODO: sahil to implement
     Button sendNotification;
     Button trainButton, testButton;
+    Button creditsButton;
     ListView listview;
     TextView weatherDataTextView;
     BroadcastReceiver broadcastReceiver;
@@ -205,6 +206,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+
+        creditsButton = (Button) findViewById(R.id.creditsButton);
+        creditsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, CreditsActivity.class);
+                startActivity(intent);
             }
         });
 
