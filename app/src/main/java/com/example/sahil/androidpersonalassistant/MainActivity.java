@@ -41,11 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import weka.classifiers.functions.LinearRegression;
-import weka.core.Attribute;
-import weka.core.Instances;
-import weka.core.converters.ConverterUtils;
-
 public class MainActivity extends AppCompatActivity {
     boolean loadedFlag;
     SharedPreferences sharedPreferences;

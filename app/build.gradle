@@ -32,5 +32,4 @@ dependencies {
     compile project(':ajt-2.11')
     compile project(':javaml-0.1.7')
     compile project(':libsvm')
-    compile project(':wekaSTRIPPED')
 }
