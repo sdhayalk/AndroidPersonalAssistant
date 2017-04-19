@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 
 import weka.classifiers.functions.LinearRegression;
+import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
@@ -186,53 +187,57 @@ public class MainActivity extends AppCompatActivity {
         trainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    ConverterUtils.DataSource latitudeDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "latitude.csv");
-                    Instances instances = latitudeDataset.getDataSet();
-                    instances.setClassIndex(2);
-                    LinearRegression latitudeLinearRegression = new LinearRegression();
-                    latitudeLinearRegression.buildClassifier(instances);
-
-                    weka.core.Instance predictInstance = new weka.core.DenseInstance(3);    //imp: added one more for class label
-                    predictInstance.setValue(0, 19);
-                    predictInstance.setValue(1, 1);
-                    double predictedLatitude = latitudeLinearRegression.classifyInstance(predictInstance);
-
-                    ConverterUtils.DataSource longitudeDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "longitude.csv");
-                    instances = longitudeDataset.getDataSet();
-                    instances.setClassIndex(2);
-                    LinearRegression longitudeLinearRegression = new LinearRegression();
-                    longitudeLinearRegression.buildClassifier(instances);
-
-                    predictInstance = (weka.core.Instance) new weka.core.DenseInstance(3);  //imp: added one more for class label
-                    predictInstance.setValue(0, 19);
-                    predictInstance.setValue(1, 1);
-                    double predictedLongitude = longitudeLinearRegression.classifyInstance(predictInstance);
-
-                    Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
-                    intent.putExtra("latitude", predictedLatitude);
-                    intent.putExtra("longitude", predictedLongitude);
-                    startActivity(intent);
-
-                }catch (Exception e)    {e.printStackTrace();}
+//                try {
+//                    ConverterUtils.DataSource latitudeDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "latitude.csv");
+//                    Instances instances = latitudeDataset.getDataSet();
+//                    instances.setClassIndex(2);
+//                    LinearRegression latitudeLinearRegression = new LinearRegression();
+//                    latitudeLinearRegression.buildClassifier(instances);
+//
+//                    weka.core.Instance predictInstance = new weka.core.DenseInstance(3);    //imp: added one more for class label
+//                    predictInstance.setValue(0, 19);
+//                    predictInstance.setValue(1, 1);
+//                    double predictedLatitude = latitudeLinearRegression.classifyInstance(predictInstance);
+//
+//                    ConverterUtils.DataSource longitudeDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "longitude.csv");
+//                    instances = longitudeDataset.getDataSet();
+//                    instances.setClassIndex(2);
+//                    LinearRegression longitudeLinearRegression = new LinearRegression();
+//                    longitudeLinearRegression.buildClassifier(instances);
+//
+//                    predictInstance = (weka.core.Instance) new weka.core.DenseInstance(3);  //imp: added one more for class label
+//                    predictInstance.setValue(0, 19);
+//                    predictInstance.setValue(1, 1);
+//                    double predictedLongitude = longitudeLinearRegression.classifyInstance(predictInstance);
+//
+//                    Toast.makeText(MainActivity.this, predictedLatitude +" "+predictedLongitude, Toast.LENGTH_SHORT).show();
+//
+//                    Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
+//                    intent.putExtra("latitude", predictedLatitude);
+//                    intent.putExtra("longitude", predictedLongitude);
+//                    startActivity(intent);
+//
+//                }catch (Exception e)    {e.printStackTrace();}
 
                 //svm:
-//                SVM svmLatitude = new SVM();
-//                svmLatitude.train(FILE_PATH + File.separator + "latitude.csv", 2);
-//                double[] values = new double[] {19, 1};
-//                Instance instanceTest = new DenseInstance(values);
-//                double predictedLatitude = Double.parseDouble(svmLatitude.test(instanceTest));
-//
-//                SVM svmLongitude = new SVM();
-//                svmLongitude.train(FILE_PATH + File.separator + "longitude.csv", 2);
-//                values = new double[] {19, 1};
-//                instanceTest = new DenseInstance(values);
-//                double predictedLongitude = Double.parseDouble(svmLongitude.test(instanceTest));
-//
-//                Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
-//                intent.putExtra("latitude", predictedLatitude);
-//                intent.putExtra("longitude", predictedLongitude);
-//                startActivity(intent);
+                SVM svmLatitude = new SVM();
+                svmLatitude.train(FILE_PATH + File.separator + "latitude.csv", 2);
+                double[] values = new double[] {20, 1};
+                Instance instanceTest = new DenseInstance(values);
+                double predictedLatitude = Double.parseDouble(svmLatitude.test(instanceTest));
+
+                SVM svmLongitude = new SVM();
+                svmLongitude.train(FILE_PATH + File.separator + "longitude.csv", 2);
+                values = new double[] {20, 1};
+                instanceTest = new DenseInstance(values);
+                double predictedLongitude = Double.parseDouble(svmLongitude.test(instanceTest));
+
+                Toast.makeText(MainActivity.this, predictedLatitude +" "+predictedLongitude, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
+                intent.putExtra("latitude", predictedLatitude);
+                intent.putExtra("longitude", predictedLongitude);
+                startActivity(intent);
             }
         });
 
