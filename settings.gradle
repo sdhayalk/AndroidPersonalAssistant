@@ -1,1 +1,1 @@
-include ':app', ':ajt-2.11', ':javaml-0.1.7', ':libsvm'
+include ':app', ':ajt-2.11', ':javaml-0.1.7', ':libsvm', ':wekaSTRIPPED'

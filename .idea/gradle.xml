@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/javaml-0.1.7" />
             <option value="$PROJECT_DIR$/libsvm" />
+            <option value="$PROJECT_DIR$/wekaSTRIPPED" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
