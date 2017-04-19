@@ -6,10 +6,18 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="Offers Page!"
+        android:id="@+id/textView2"
+        android:text="Offers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2" />
+        android:gravity="center"
+        android:layout_margin="8dp" />
+
+    <ListView
+        android:id="@+id/offersListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2" />
 
     <Button
         android:id="@+id/shareButton"
