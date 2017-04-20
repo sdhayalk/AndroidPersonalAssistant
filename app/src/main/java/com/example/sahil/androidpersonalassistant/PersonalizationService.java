@@ -1,5 +1,7 @@
 package com.example.sahil.androidpersonalassistant;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,8 +18,13 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import net.sf.javaml.core.DenseInstance;
+import net.sf.javaml.core.Instance;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,7 +72,7 @@ public class PersonalizationService extends Service {
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         //Toast.makeText(this, " MyService Started", Toast.LENGTH_SHORT).show();
 
         checkForFileAndFolder();
@@ -89,6 +96,7 @@ public class PersonalizationService extends Service {
 
         city = getCurrentCity(latitude, longitude);
         writetdb(hour, day, city, latitude, longitude);
+        return START_STICKY;
     }
 
     @Override
@@ -195,6 +203,7 @@ public class PersonalizationService extends Service {
                 myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile, true);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            latitude = (double)Math.round(latitude * 10000d) / 10000d;
             myOutWriter.write("" + hour + "," + day + "," + latitude + "\n");
             myOutWriter.close();
             fOut.close();
@@ -204,9 +213,30 @@ public class PersonalizationService extends Service {
                 myFile.createNewFile();
             fOut = new FileOutputStream(myFile, true);
             myOutWriter = new OutputStreamWriter(fOut);
+            longitude = (double)Math.round(longitude * 10000d) / 10000d;
             myOutWriter.write("" + hour + "," + day + "," + longitude + "\n");
             myOutWriter.close();
             fOut.close();
+
+            //svm:
+            SVM svmLatitude = new SVM();
+            svmLatitude.train(FILE_PATH_DB + File.separator + "latitude.csv", 2);
+            double[] values = new double[] {20, 1};
+            Instance instanceTest = new DenseInstance(values);
+            double predictedLatitude = Double.parseDouble(svmLatitude.test(instanceTest));
+
+            SVM svmLongitude = new SVM();
+            svmLongitude.train(FILE_PATH_DB + File.separator + "longitude.csv", 2);
+            values = new double[] {20, 1};
+            instanceTest = new DenseInstance(values);
+            double predictedLongitude = Double.parseDouble(svmLongitude.test(instanceTest));
+
+            sendNotification(predictedLatitude, predictedLongitude, 1);
+//            Intent intent = new Intent(PersonalizationService.this, NotificationActivity.class);
+//            intent.putExtra("latitude", predictedLatitude);
+//            intent.putExtra("longitude", predictedLongitude);
+//            intent.putExtra("type", 1);
+//            startActivity(intent);
 
 //            myFile = new File(FILE_PATH_DB + File.separator + "latitude.csv");
 //            if(!myFile.exists())
@@ -233,4 +263,33 @@ public class PersonalizationService extends Service {
         }
     }
 
+    public void sendNotification(double lat, double lng, int code)  {
+        Context context = this;
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.activity_notification);
+        String mainMsg="";
+        String sideMsg="";
+
+        Intent intent = null;
+        if(code == 1) {
+            intent = new Intent(this, SuggestRestaurantActivity.class);
+            intent.putExtra("latitude", lat);
+            intent.putExtra("longitude", lng);
+            mainMsg = "Nearby Restaurant";
+            sideMsg = " Suggestions based on your location after some time";
+        }
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setTicker(getString(R.string.app_name))
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setContent(remoteViews);
+
+        remoteViews.setImageViewResource(R.id.notificationLogo, R.mipmap.ic_launcher);
+        remoteViews.setTextViewText(R.id.mainMsgTextView, mainMsg);
+        remoteViews.setTextViewText(R.id.sideMsgTextView, sideMsg);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, builder.build());
+    }
 }

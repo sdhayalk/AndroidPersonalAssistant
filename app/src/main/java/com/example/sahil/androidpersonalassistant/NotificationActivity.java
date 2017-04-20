@@ -16,23 +16,30 @@ public class NotificationActivity extends AppCompatActivity {
     private RemoteViews remoteViews;
     private int notificationId;
     public int requestCode = 111;
+    double latitude, longitude;
     String mainMsg, sideMsg;
+    int code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getIntent().getExtras();
-        mainMsg = bundle.getString("mainMsg");
-        sideMsg = bundle.getString("sideMsg");
+        latitude = bundle.getDouble("latitude");
+        longitude = bundle.getDouble("longitude");
+        code = bundle.getInt("type");
 
         context = this;
         remoteViews = new RemoteViews(getPackageName(), R.layout.activity_notification);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("mainMsg", mainMsg);
-        intent.putExtra("sideMsg", sideMsg);
-
+        Intent intent = null;
+        if(code == 1) {
+            intent = new Intent(this, SuggestRestaurantActivity.class);
+            intent.putExtra("latitude", latitude);
+            intent.putExtra("longitude", longitude);
+            mainMsg = "Nearby Restaurant";
+            sideMsg = " Suggestions based on your location after some time";
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
