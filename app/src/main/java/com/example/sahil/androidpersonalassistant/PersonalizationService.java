@@ -279,7 +279,7 @@ public class PersonalizationService extends Service {
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.icon)
                 .setTicker(getString(R.string.app_name))
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
