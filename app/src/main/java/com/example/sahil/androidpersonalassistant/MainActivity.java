@@ -178,6 +178,15 @@ public class MainActivity extends AppCompatActivity {
 //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
 //                                                                                    //it should be AlarmManager.INTERVAL_HOUR
 
+        signOutButton =(Button) findViewById(R.id.signOutButton);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sharedPreferences.edit().clear().commit();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }}
+        );
         trainButton = (Button) findViewById(R.id.trainButton);
         trainButton.setOnClickListener(new View.OnClickListener() {
             @Override
