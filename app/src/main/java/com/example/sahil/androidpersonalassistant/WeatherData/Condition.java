@@ -7,6 +7,7 @@ package com.example.sahil.androidpersonalassistant.WeatherData;
  *
  */
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -22,6 +23,11 @@ public class Condition implements JSONPopulatorClass {
         temperature = jsonObject.optInt("temp");
         code = jsonObject.optInt("code");
         description = jsonObject.optString("text");
+    }
+
+    @Override
+    public void populateArray(JSONArray jsonArray) {
+
     }
 
     public int getTemperature() {

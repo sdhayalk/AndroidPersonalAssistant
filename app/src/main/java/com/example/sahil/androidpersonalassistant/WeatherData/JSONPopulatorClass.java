@@ -7,6 +7,7 @@ package com.example.sahil.androidpersonalassistant.WeatherData;
  *
  */
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -15,4 +16,5 @@ import org.json.JSONObject;
 
 public interface JSONPopulatorClass {
     void populate(JSONObject jsonObject);
+    void populateArray(JSONArray jsonArray);
 }

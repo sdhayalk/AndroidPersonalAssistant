@@ -6,6 +6,7 @@ package com.example.sahil.androidpersonalassistant.WeatherData;
  * referred from : https://www.youtube.com/watch?v=gJ9Ny_J3tcM
  *
  */
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -18,6 +19,11 @@ public class Units implements JSONPopulatorClass {
     @Override
     public void populate(JSONObject jsonObject) {
         temperature = jsonObject.optString("temperature");
+    }
+
+    @Override
+    public void populateArray(JSONArray jsonArray) {
+
     }
 
     public String getTemperature() {

@@ -1,5 +1,6 @@
 package com.example.sahil.androidpersonalassistant.WeatherData;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -15,6 +16,11 @@ public class Atmosphere implements JSONPopulatorClass {
         pressure = jsonObject.optString("pressure");
         rising = jsonObject.optString("rising");
         visibility = jsonObject.optString("visibility");
+    }
+
+    @Override
+    public void populateArray(JSONArray jsonArray) {
+
     }
 
     public String getHumidity() {

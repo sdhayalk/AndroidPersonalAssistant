@@ -14,10 +14,13 @@ package com.example.sahil.androidpersonalassistant;
 //ba9dbcf0825b6b4ab154b6feb19442e8591a83ef
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.sahil.androidpersonalassistant.WeatherData.Channel;
@@ -36,43 +39,77 @@ import java.util.Locale;
 
 public class WeatherForecastActivity  extends AppCompatActivity implements WeatherServiceCallback {
     String city;
-    TextView currentTemperatureTextView, currentConditionTextView, currentLocationTextView, currentHumidityTextView, currentPressureTextView, currentRisingTextView, currentVisibilityTextView;
+    double latitude, longitude;
+    TextView temperatureHighTextView, temperatureLowTextView, textTextView;
     WeatherServiceUsingYahoo weatherServiceUsingYahoo;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_suggest_weather);
+        setContentView(R.layout.activity_forecast_weather);
+
+//        Bundle bundle = getIntent().getExtras();
+//        city = bundle.getString("city");
 
         Bundle bundle = getIntent().getExtras();
+        latitude = bundle.getDouble("latitude");
+        longitude = bundle.getDouble("longitude");
         city = bundle.getString("city");
 
-        currentTemperatureTextView = (TextView) findViewById(R.id.currentTemperatureTextView);
-        currentConditionTextView = (TextView) findViewById(R.id.currentConditionTextView);
-        currentLocationTextView = (TextView) findViewById(R.id.currentLocationTextView);
-        currentHumidityTextView = (TextView) findViewById(R.id.currentHumidityTextView);
-        currentPressureTextView = (TextView) findViewById(R.id.currentPressureTextView);
-        currentRisingTextView = (TextView) findViewById(R.id.currentRisingTextView);
-        currentVisibilityTextView = (TextView) findViewById(R.id.currentVisibilityTextView);
+        temperatureHighTextView = (TextView) findViewById(R.id.temperatureHighTextView);
+        temperatureLowTextView = (TextView) findViewById(R.id.temperatureLowTextView);
+        textTextView = (TextView) findViewById(R.id.textTextView);
 
-        weatherServiceUsingYahoo = new WeatherServiceUsingYahoo(this);
-        weatherServiceUsingYahoo.refreshWeather(city);
+        if(city!=null)  {
+            weatherServiceUsingYahoo = new WeatherServiceUsingYahoo(WeatherForecastActivity.this);
+            weatherServiceUsingYahoo.refreshWeather(city);
+        }
+        else {
+            AsyncTaskWeather asyncTaskRunner = new AsyncTaskWeather();
+            asyncTaskRunner.execute();
+        }
+
 
     }
 
     @Override
     public void successfullService(Channel channel) {
         Item item = channel.getItem();
-        currentTemperatureTextView.setText(item.getCondition().getTemperature() + " " + channel.getUnits().getTemperature());
-        currentConditionTextView.setText(item.getCondition().getDescription());
-        currentLocationTextView.setText(city);
-        currentHumidityTextView.setText(channel.getAtmosphere().getHumidity());
-        currentPressureTextView.setText(channel.getAtmosphere().getPressure());
-        currentRisingTextView.setText(channel.getAtmosphere().getRising());
-        currentVisibilityTextView.setText(channel.getAtmosphere().getVisibility());
+        temperatureHighTextView.setText(item.getForecast().getHigh()+"");
+        temperatureLowTextView.setText(item.getForecast().getLow()+"");
+        textTextView.setText(item.getForecast().getText());
     }
 
     @Override
     public void unsuccessfullService(Exception exception) {
         exception.printStackTrace();
+    }
+
+    public class AsyncTaskWeather extends AsyncTask<String, String, String> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(WeatherForecastActivity.this, "Please wait", "Fetching weather forecast");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                //referred from: http://stackoverflow.com/questions/8119369/how-can-i-get-the-current-city-name-in-android
+                Geocoder gcd = new Geocoder(WeatherForecastActivity.this, Locale.getDefault());
+                List<Address> addresses = gcd.getFromLocation(latitude, longitude, 1);
+                if (addresses.size() > 0)
+                    city = addresses.get(0).getLocality();
+                Log.d("latitude: ", latitude+"");
+            } catch (Exception e)   {e.printStackTrace();}
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressDialog.dismiss();
+            weatherServiceUsingYahoo = new WeatherServiceUsingYahoo(WeatherForecastActivity.this);
+            weatherServiceUsingYahoo.refreshWeather(city);
+        }
     }
 }

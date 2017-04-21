@@ -4,6 +4,7 @@ import android.*;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     Button creditsButton;
     ListView listview;
     TextView weatherDataTextView;
+    ProgressDialog progressDialog;
     BroadcastReceiver broadcastReceiver;
     String mainMsg, sideMsg;
     LocationManager locationManager;
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
         //disableAll();
 
 
+        progressDialog = ProgressDialog.show(MainActivity.this, "Fetching current location", "Please wait...");
         Intent locationDataIntent = new Intent(getApplicationContext(), LocationData.class);
         startService(locationDataIntent);
 
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         /***********************LIST VIEW******************/
 
-        String[] values = new String[] { "OFFERS","RESTAURANTS","WEATHER","USER PREFERENCES","SEND NOTIFICATION"};
+        String[] values = new String[] { "OFFERS","RESTAURANTS","WEATHER","USER PREFERENCES", "WEATHER FORECAST"};
 
         final ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < values.length; ++i) {
@@ -138,10 +141,10 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else if(position==4){
-                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                    Intent intent = new Intent(MainActivity.this, WeatherForecastActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("mainMsg", mainMsg);
-                    bundle.putString("sideMsg", sideMsg);
+                    intent.putExtra("latitude", latitude);
+                    intent.putExtra("longitude", longitude);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -243,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
                     latitude = (double) intent.getExtras().get("latitude");
                     longitude = (double) intent.getExtras().get("longitude");
                     enableAll();
+                    progressDialog.dismiss();
                 }
             };
         }
