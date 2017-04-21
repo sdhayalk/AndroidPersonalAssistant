@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.regex.Pattern;
 /*
  * Created by dpkch on 3/10/2017.
  */
@@ -34,6 +38,7 @@ public class RegisterActivity  extends AppCompatActivity {
         emailEditText = (EditText) findViewById(R.id.emailEditText);
         rePasswordEditText = (EditText) findViewById(R.id.rePasswordEditText);
 
+
         usernameEditText.setText(username);
 
         registerButton=(Button) findViewById(R.id.registerButton);
@@ -48,6 +53,10 @@ public class RegisterActivity  extends AppCompatActivity {
                     Toast.makeText(RegisterActivity.this, "Password do not match!", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    if(!isValidEmail(emailEditText.getText().toString())){
+                        Toast.makeText(RegisterActivity.this, "Invalid Email!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("username", usernameEditText.getText().toString());
                     editor.putString("password", passwordEditText.getText().toString());
@@ -67,5 +76,10 @@ public class RegisterActivity  extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean isValidEmail(String email) { // validate the email address
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
     }
 }

@@ -174,6 +174,17 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e)   {e.printStackTrace();}
 
 
+        signOutButton =(Button) findViewById(R.id.signOutButton);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopService(new Intent(getApplicationContext(), PersonalizationService.class));
+                sharedPreferences.edit().clear().commit();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         trainButton = (Button) findViewById(R.id.trainButton);
         trainButton.setOnClickListener(new View.OnClickListener() {
             @Override
