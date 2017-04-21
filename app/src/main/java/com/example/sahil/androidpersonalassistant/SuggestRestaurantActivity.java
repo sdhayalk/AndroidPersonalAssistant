@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import java.util.List;
 
 public class SuggestRestaurantActivity extends AppCompatActivity implements LocationListener {
     // use this class for Weather Suggestions
+    private ProgressBar spinner;
     double latitude, longitude;
     String API_KEY = "AIzaSyAWAY4zfihHOlrdy9dN2JINy0fiSsFgIXo";
     ListView restaurantListView;
@@ -52,10 +54,12 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_restaurant);
-
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
         Bundle bundle = getIntent().getExtras();
         latitude = bundle.getDouble("latitude");
         longitude = bundle.getDouble("longitude");
+
+        spinner.setVisibility(View.VISIBLE);
 
         // Getting Google Play availability status
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
@@ -111,9 +115,8 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
             Log.d("In OnCreate", sb.toString());
             placesTask.execute(sb.toString());
         }
-
+        //spinner.setVisibility(View.GONE);
         restaurantListView = (ListView) findViewById(R.id.restaurantListView);
-
     }
 
     private class PlacesTask extends AsyncTask<String, Integer, String> {
@@ -129,6 +132,7 @@ public class SuggestRestaurantActivity extends AppCompatActivity implements Loca
 
         @Override
         protected void onPostExecute(String result){
+            spinner.setVisibility(View.GONE);
             ParserTask parserTask = new ParserTask();
             parserTask.execute(result);
         }
