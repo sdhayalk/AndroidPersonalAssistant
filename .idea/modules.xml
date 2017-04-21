@@ -8,7 +8,6 @@
       <module fileurl="file://$PROJECT_DIR$/javaml-0.1.7/javaml-0.1.7.iml" filepath="$PROJECT_DIR$/javaml-0.1.7/javaml-0.1.7.iml" />
       <module fileurl="file://$PROJECT_DIR$/libsvm/libsvm.iml" filepath="$PROJECT_DIR$/libsvm/libsvm.iml" />
       <module fileurl="file://$PROJECT_DIR$/wekaSTRIPPED/wekaSTRIPPED.iml" filepath="$PROJECT_DIR$/wekaSTRIPPED/wekaSTRIPPED.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wekaSTRIPPED/wekaSTRIPPED.iml" filepath="$PROJECT_DIR$/wekaSTRIPPED/wekaSTRIPPED.iml" />
     </modules>
   </component>
 </project>

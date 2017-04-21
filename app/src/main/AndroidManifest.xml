@@ -100,6 +100,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".WeatherForecastActivity">
+            <intent-filter>
+                <action android:name="com.example.sahil.androidpersonalassistant.WEATHERFORECASTACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".NotificationView" >
         </activity>
 

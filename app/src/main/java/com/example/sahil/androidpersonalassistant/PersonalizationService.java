@@ -36,6 +36,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import weka.classifiers.trees.J48;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils;
+
 /**
  * Created by SAHIL on 16-04-2017.
  */
@@ -198,54 +202,38 @@ public class PersonalizationService extends Service {
             db.execSQL( "insert into tbl_"+ TABLE+"(hour,day, city,latitude,longitude) values ("+hour+", "+day+", '"+city+"', "+latitude+", "+longitude+" );" );
             db.setTransactionSuccessful(); //commit your changes
 
-            File myFile = new File(FILE_PATH_DB + File.separator + "latitude.csv");
+            File myFile = new File(FILE_PATH_DB + File.separator + "location.csv");
             if(!myFile.exists())
                 myFile.createNewFile();
             FileOutputStream fOut = new FileOutputStream(myFile, true);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-            latitude = (double)Math.round(latitude * 10000d) / 10000d;
-            myOutWriter.write("" + hour + "," + day + "," + latitude + "\n");
+            myOutWriter.write("" + hour + "," + day + "," + city + "\n");
             myOutWriter.close();
             fOut.close();
 
-            myFile = new File(FILE_PATH_DB + File.separator + "longitude.csv");
-            if(!myFile.exists())
-                myFile.createNewFile();
-            fOut = new FileOutputStream(myFile, true);
-            myOutWriter = new OutputStreamWriter(fOut);
-            longitude = (double)Math.round(longitude * 10000d) / 10000d;
-            myOutWriter.write("" + hour + "," + day + "," + longitude + "\n");
-            myOutWriter.close();
-            fOut.close();
+            if(hour < 23) {
+                ConverterUtils.DataSource locationDataset = new ConverterUtils.DataSource(FILE_PATH_DB + File.separator + "location.csv");
+                locationDataset.getDataSet(2);
+                Instances instances = locationDataset.getDataSet();
+                instances.setClassIndex(instances.numAttributes() - 1);
 
-            //svm:
-            SVM svmLatitude = new SVM();
-            svmLatitude.train(FILE_PATH_DB + File.separator + "latitude.csv", 2);
-            double[] values = new double[] {20, 1};
-            Instance instanceTest = new DenseInstance(values);
-            double predictedLatitude = Double.parseDouble(svmLatitude.test(instanceTest));
+                J48 j48 = new J48();
+                j48.buildClassifier(instances);
 
-            SVM svmLongitude = new SVM();
-            svmLongitude.train(FILE_PATH_DB + File.separator + "longitude.csv", 2);
-            values = new double[] {20, 1};
-            instanceTest = new DenseInstance(values);
-            double predictedLongitude = Double.parseDouble(svmLongitude.test(instanceTest));
+                weka.core.Instance testInstance = new weka.core.DenseInstance(3);
+                testInstance.setValue(0, hour + 1);
+                testInstance.setValue(1, day);
+                testInstance.setValue(2, -1);
+                Instances testInstances = new Instances(instances);
+                testInstances.setClassIndex(testInstances.numAttributes() - 1);
+                testInstances.delete();
+                testInstances.add(testInstance);
 
-            sendNotification(predictedLatitude, predictedLongitude, 1);
-//            Intent intent = new Intent(PersonalizationService.this, NotificationActivity.class);
-//            intent.putExtra("latitude", predictedLatitude);
-//            intent.putExtra("longitude", predictedLongitude);
-//            intent.putExtra("type", 1);
-//            startActivity(intent);
+                double result = j48.classifyInstance(testInstances.instance(0));
+                Log.d("Predicted City = ", instances.classAttribute().value((int) result) + "");
 
-//            myFile = new File(FILE_PATH_DB + File.separator + "latitude.csv");
-//            if(!myFile.exists())
-//                myFile.createNewFile();
-//            FileOutputStream fOut = new FileOutputStream(myFile, true);
-//            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-//            myOutWriter.write("" + hour + "," + day + "," + latitude + "\n");
-//            myOutWriter.close();
-//            fOut.close();
+                sendNotification(instances.classAttribute().value((int) result), 1);
+            }
         }
         catch (SQLiteException e) { // can't toast from a service
             final SQLiteException ee=e;
@@ -263,7 +251,7 @@ public class PersonalizationService extends Service {
         }
     }
 
-    public void sendNotification(double lat, double lng, int code)  {
+    public void sendNotification(String predictedCity, int code)  {
         Context context = this;
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.activity_notification);
         String mainMsg="";
@@ -271,11 +259,10 @@ public class PersonalizationService extends Service {
 
         Intent intent = null;
         if(code == 1) {
-            intent = new Intent(this, SuggestRestaurantActivity.class);
-            intent.putExtra("latitude", lat);
-            intent.putExtra("longitude", lng);
-            mainMsg = "Nearby Restaurant";
-            sideMsg = " Suggestions based on your location after some time";
+            intent = new Intent(this, WeatherForecastActivity.class);
+            intent.putExtra("city", predictedCity);
+            mainMsg = "Weather in " + predictedCity;
+            sideMsg = "Based on your predicted location after some time";
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)

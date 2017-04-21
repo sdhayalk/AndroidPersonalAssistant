@@ -24,15 +24,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.sf.javaml.core.DenseInstance;
-import net.sf.javaml.core.Instance;
+import weka.core.DenseInstance;
+import weka.core.Instances;
+import weka.core.Instance;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.OutputStreamWriter;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -41,13 +45,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.trees.J48;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils;
+
 public class MainActivity extends AppCompatActivity {
     boolean loadedFlag;
     SharedPreferences sharedPreferences;
     String username, password;
     Button signOutButton; // TODO: sahil to implement
     Button sendNotification;
-    Button trainButton, testButton;
+    Button trainButton;
     Button creditsButton;
     ListView listview;
     TextView weatherDataTextView;
@@ -56,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     LocationManager locationManager;
     Geocoder geocoder;
     double latitude, longitude;
-    String currentCity;
     public static final String FILE_PATH = Environment.getExternalStorageDirectory() + File.separator + "Mydata";   //was APA
 
     @Override
@@ -165,82 +173,38 @@ public class MainActivity extends AppCompatActivity {
                 file.createNewFile();
         } catch (Exception e)   {e.printStackTrace();}
 
-//        Calendar calendar = Calendar.getInstance();
-//        Calendar currentCalender = Calendar.getInstance();
-//
-//        calendar.set(Calendar.HOUR_OF_DAY, currentCalender.get(Calendar.HOUR_OF_DAY));
-//        calendar.set(Calendar.MINUTE, currentCalender.get(Calendar.MINUTE)+1);
-//        Toast.makeText(this, currentCalender.get(Calendar.HOUR_OF_DAY) + " "+ (int)(currentCalender.get(Calendar.MINUTE)+1), Toast.LENGTH_SHORT).show();
-//
-//        Intent intent = new Intent(getApplicationContext(), PersonalizationNotificationReceiver.class);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 123, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
-//                                                                                    //it should be AlarmManager.INTERVAL_HOUR
 
         trainButton = (Button) findViewById(R.id.trainButton);
         trainButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                try {
-//                    ConverterUtils.DataSource latitudeDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "latitude.csv");
-//                    Instances instances = latitudeDataset.getDataSet();
-//                    instances.setClassIndex(2);
-//                    LinearRegression latitudeLinearRegression = new LinearRegression();
-//                    latitudeLinearRegression.buildClassifier(instances);
-//
-//                    weka.core.Instance predictInstance = new weka.core.DenseInstance(3);    //imp: added one more for class label
-//                    predictInstance.setValue(0, 19);
-//                    predictInstance.setValue(1, 1);
-//                    double predictedLatitude = latitudeLinearRegression.classifyInstance(predictInstance);
-//
-//                    ConverterUtils.DataSource longitudeDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "longitude.csv");
-//                    instances = longitudeDataset.getDataSet();
-//                    instances.setClassIndex(2);
-//                    LinearRegression longitudeLinearRegression = new LinearRegression();
-//                    longitudeLinearRegression.buildClassifier(instances);
-//
-//                    predictInstance = (weka.core.Instance) new weka.core.DenseInstance(3);  //imp: added one more for class label
-//                    predictInstance.setValue(0, 19);
-//                    predictInstance.setValue(1, 1);
-//                    double predictedLongitude = longitudeLinearRegression.classifyInstance(predictInstance);
-//
-//                    Toast.makeText(MainActivity.this, predictedLatitude +" "+predictedLongitude, Toast.LENGTH_SHORT).show();
-//
-//                    Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
-//                    intent.putExtra("latitude", predictedLatitude);
-//                    intent.putExtra("longitude", predictedLongitude);
-//                    startActivity(intent);
-//
-//                }catch (Exception e)    {e.printStackTrace();}
+                try {
+                    EditText attr1EditText = (EditText) findViewById(R.id.attr1EditText);
+                    EditText attr2EditText = (EditText) findViewById(R.id.attr2EditText);
+                    double attr1 = Double.parseDouble(String.valueOf(attr1EditText.getText()));
+                    double attr2 = Double.parseDouble(String.valueOf(attr2EditText.getText()));
 
-                //svm:
-                SVM svmLatitude = new SVM();
-                svmLatitude.train(FILE_PATH + File.separator + "latitude.csv", 2);
-                double[] values = new double[] {20, 1};
-                Instance instanceTest = new DenseInstance(values);
-                double predictedLatitude = Double.parseDouble(svmLatitude.test(instanceTest));
+                    ConverterUtils.DataSource locationDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "location.csv");
+                    locationDataset.getDataSet(2);
+                    Instances instances = locationDataset.getDataSet();
+                    instances.setClassIndex(instances.numAttributes()-1);
 
-                SVM svmLongitude = new SVM();
-                svmLongitude.train(FILE_PATH + File.separator + "longitude.csv", 2);
-                values = new double[] {20, 1};
-                instanceTest = new DenseInstance(values);
-                double predictedLongitude = Double.parseDouble(svmLongitude.test(instanceTest));
+                    J48 j48 = new J48();
+                    j48.buildClassifier(instances);
 
-                Toast.makeText(MainActivity.this, predictedLatitude +" "+predictedLongitude, Toast.LENGTH_SHORT).show();
+                    Instance testInstance = new DenseInstance(3);
+                    testInstance.setValue(0, attr1);
+                    testInstance.setValue(1, attr2);
+                    testInstance.setValue(2, -1);
+                    Instances testInstances = new Instances(instances);
+                    testInstances.setClassIndex(testInstances.numAttributes() - 1);
+                    testInstances.delete();
+                    testInstances.add(testInstance);
 
-                Intent intent = new Intent(MainActivity.this, SuggestRestaurantActivity.class);
-                intent.putExtra("latitude", predictedLatitude);
-                intent.putExtra("longitude", predictedLongitude);
-                startActivity(intent);
-            }
-        });
+                    double result = j48.classifyInstance(testInstances.instance(0));
+                    Log.d("Predicted City = ", instances.classAttribute().value((int)result)+"");
 
-        testButton = (Button) findViewById(R.id.testButton);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+                }catch (Exception e)    {e.printStackTrace();}
             }
         });
 
