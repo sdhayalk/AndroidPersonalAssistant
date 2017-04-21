@@ -108,6 +108,7 @@ public class PersonalizationService extends Service {
         // TODO Auto-generated method stub
         Toast.makeText(this, "Service Stopped!", Toast.LENGTH_SHORT).show();
         super.onDestroy();
+        this.stopSelf();
         if(broadcastReceiver != null)
             unregisterReceiver(broadcastReceiver);
     }

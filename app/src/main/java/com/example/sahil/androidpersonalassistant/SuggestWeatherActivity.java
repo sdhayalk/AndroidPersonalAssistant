@@ -18,6 +18,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.sahil.androidpersonalassistant.WeatherData.Channel;
@@ -37,17 +39,19 @@ import java.util.Locale;
 public class SuggestWeatherActivity  extends AppCompatActivity implements WeatherServiceCallback {
     double latitude, longitude;
     String currentLocation;
+    private ProgressBar spinner;
     TextView currentTemperatureTextView, currentConditionTextView, currentLocationTextView, currentHumidityTextView, currentPressureTextView, currentRisingTextView, currentVisibilityTextView;
     WeatherServiceUsingYahoo weatherServiceUsingYahoo;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_suggest_weather);
-
         Bundle bundle = getIntent().getExtras();
         latitude = bundle.getDouble("latitude");
         longitude = bundle.getDouble("longitude");
 
+        setContentView(R.layout.activity_suggest_weather);
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.VISIBLE);
         //referred from: http://stackoverflow.com/questions/8119369/how-can-i-get-the-current-city-name-in-android
         try {
             Geocoder gcd = new Geocoder(this, Locale.getDefault());
@@ -71,6 +75,7 @@ public class SuggestWeatherActivity  extends AppCompatActivity implements Weathe
 
     @Override
     public void successfullService(Channel channel) {
+        spinner.setVisibility(View.GONE);
         Item item = channel.getItem();
         currentTemperatureTextView.setText(item.getCondition().getTemperature() + " " + channel.getUnits().getTemperature());
         currentConditionTextView.setText(item.getCondition().getDescription());
