@@ -30,17 +30,6 @@ public class UserPreferencesActivity extends AppCompatActivity implements Locati
             Toast.makeText(this, "Cannot get username and password", Toast.LENGTH_SHORT).show();
         }
 
-        currentLocationButton = (Button) findViewById(R.id.currentLocationButton);
-        currentLocationButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //get current address
-                //referred from: http://javapapers.com/android/get-current-location-in-android/
-
-            }
-        });
-
-        addressEditText = (EditText) findViewById(R.id.addressEditText);
-
         confirmPreferencesButton = (Button) findViewById(R.id.confirmPreferencesButton);
         confirmPreferencesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

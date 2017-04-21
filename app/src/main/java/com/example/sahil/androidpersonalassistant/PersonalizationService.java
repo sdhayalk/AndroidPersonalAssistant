@@ -102,7 +102,7 @@ public class PersonalizationService extends Service {
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
-        Toast.makeText(this, "Servics Stopped", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Service Stopped!", Toast.LENGTH_SHORT).show();
         super.onDestroy();
         if(broadcastReceiver != null)
             unregisterReceiver(broadcastReceiver);
