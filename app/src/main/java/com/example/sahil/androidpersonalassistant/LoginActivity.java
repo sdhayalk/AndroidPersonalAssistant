@@ -1,7 +1,7 @@
 package com.example.sahil.androidpersonalassistant;
 
-import android.*;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,15 +11,23 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
 
-public class LoginActivity extends AppCompatActivity {
+//import org.json.JSONObject;
+//import cz.msebera.android.httpclient.Header;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+public class LoginActivity extends AppCompatActivity implements OnRequestCompleted{
 
     SharedPreferences sharedPreferences;
     String username, password;
@@ -29,6 +37,18 @@ public class LoginActivity extends AppCompatActivity {
     Button registerButton;
     CheckBox rememberMe;
 
+    ProgressDialog prgDialog;
+    InvokeServerAPI invokeServerAPI;
+    OnRequestCompleted onRequestCompleted;
+
+    static final String AWS_API_TAG =  "users_login";
+    static final String LOG_TAG = "LOGIN_SERVICE";
+
+    @Override
+    public void taskCompleted(String stringResponse, JSONObject jsonResponse)
+    {
+        runOnCompletion(stringResponse, jsonResponse);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +60,17 @@ public class LoginActivity extends AppCompatActivity {
         notificationmanager.cancel(0);
 
         sharedPreferences = getSharedPreferences("PreferencesToCheckIfLoggedIn", Context.MODE_PRIVATE);
-        username = sharedPreferences.getString("username", null);
+        username = sharedPreferences.getString("user_name", null);
         password = sharedPreferences.getString("password", null);
         keepLoggedIn=sharedPreferences.getBoolean("keepLoggedIn",false);
+
+//        invokeServerAPI = new InvokeServerAPI();
+        invokeServerAPI = new InvokeServerAPI(getApplicationContext(), this);
 
         if(keepLoggedIn){
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("username", username);
+            bundle.putString("user_name", username);
             bundle.putString("password", password);
             intent.putExtras(bundle);
             startActivity(intent);
@@ -62,39 +85,40 @@ public class LoginActivity extends AppCompatActivity {
 
             continueButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    if (usernameEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")) {
-                        Toast.makeText(LoginActivity.this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if(username==null){
-                            Toast.makeText(LoginActivity.this, "User Not Registered!", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            if (!(username.equals(usernameEditText.getText().toString()))) {
+
+                    String username_text = usernameEditText.getText().toString();
+                    String password_text = passwordEditText.getText().toString();
+
+                    RequestParams requestParams = new RequestParams();
+
+                    if(username == null && Utility.isNotNull(username_text) && Utility.isNotNull(password_text))
+                    {
+
+                        requestParams.put("user_name", username_text);
+                        requestParams.put("password", password_text);
+
+                        String stringParams = String.format("user_name=%s&password=%s",username_text,password_text);
+
+                        invokeServerAPI.executeRequest(stringParams,requestParams,AWS_API_TAG);
+
+
+                    } else if (Utility.isNull(username_text) || Utility.isNull(password_text)){
+                        Toast.makeText(getApplicationContext(), "Please fill the form, don't leave any field blank", Toast.LENGTH_LONG).show();
+                    }
+
+                    else {
+                            if ( !(username.equals(username_text)))
+                            {
                                 Toast.makeText(LoginActivity.this, "User Not Registered!", Toast.LENGTH_SHORT).show();
 
-                            } else {
-                                if (!(password.equals(passwordEditText.getText().toString()))) {
+                            }
+                            else if ( !(password.equals(password_text)) )
+                            {
                                     Toast.makeText(LoginActivity.this, "Incorrect Password!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("username", usernameEditText.getText().toString());
-                                    bundle.putString("password", passwordEditText.getText().toString());
-                                    if(rememberMe.isChecked()){
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putBoolean("keepLoggedIn",true);
-                                        editor.commit();
-                                    }
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                }
+
                             }
                         }
-//                        SharedPreferences.Editor editor = sharedPreferences.edit();
-//                        editor.putString("username", usernameEditText.getText().toString());
-//                        editor.putString("password", passwordEditText.getText().toString());
-//                        editor.commit();
-                    }
+
                 }
             });
 
@@ -103,12 +127,51 @@ public class LoginActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("username", usernameEditText.getText().toString());
+                    bundle.putString("user_name", usernameEditText.getText().toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
         }
+    }
+
+
+    void runOnCompletion(String stringResponse, JSONObject jsonResponse)
+    {
+        String username_text = usernameEditText.getText().toString();
+        String password_text = passwordEditText.getText().toString();
+
+        try {
+
+            boolean request_success = Boolean.valueOf(Utility.jsonRecurseKeys(jsonResponse,"success"));
+            String request_message = Utility.jsonRecurseKeys(jsonResponse,"message");
+            if ( request_success )
+            {
+
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("user_name", username_text );
+                bundle.putString("password", password_text );
+                if(rememberMe.isChecked()){
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("keepLoggedIn",true);
+                    editor.commit();
+                }
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), request_message, Toast.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
+            Log.i(LOG_TAG + " | Exp ", e.toString());
+        }
+
     }
 
     //referred from: https://www.youtube.com/watch?v=lvcGh2ZgHeA
