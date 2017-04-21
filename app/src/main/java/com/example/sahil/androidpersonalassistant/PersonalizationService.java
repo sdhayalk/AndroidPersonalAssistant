@@ -23,9 +23,6 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import net.sf.javaml.core.DenseInstance;
-import net.sf.javaml.core.Instance;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

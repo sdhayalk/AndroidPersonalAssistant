@@ -29,10 +29,11 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services:10.2.0'
-    compile project(':ajt-2.11')
-    compile project(':javaml-0.1.7')
-    compile project(':libsvm')
-    compile project(':wekaSTRIPPED')
+    //    compile project(':ajt-2.11')
+    //    compile project(':javaml-0.1.7')
+    //    compile project(':libsvm')
+    //    compile project(':wekaSTRIPPED')
     compile files('libs/httpclient-4.4.1.2.jar')
     compile files('libs/android-async-http-1.4.9.jar')
+    compile files('libs/wekaSTRIPPED.jar')
 }

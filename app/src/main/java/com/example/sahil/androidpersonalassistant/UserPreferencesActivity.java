@@ -17,9 +17,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import net.sf.javaml.core.DenseInstance;
-import net.sf.javaml.core.Instance;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
