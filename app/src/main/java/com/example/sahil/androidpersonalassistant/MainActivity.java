@@ -118,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view,int position, long id) {
                 if(position==0){
                     Intent intent = new Intent(MainActivity.this, SuggestOfferActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username", username);
+                    bundle.putString("password", password);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
                 else if(position==1){
@@ -288,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // referred from http://www.vogella.com/tutorials/AndroidListView/article.html
     private class StableArrayAdapter extends ArrayAdapter<String> {
         HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 
