@@ -75,27 +75,6 @@ public class SuggestOfferActivity extends AppCompatActivity implements OnRequest
         String query = String.format("%s&%s", "clothing", "shoes");
         getSuggestions(SuggestOfferActivity.this, query);
 
-//        final String[] values = getSuggestions1.returnResult();
-//
-//
-//        final ArrayList<String> list = new ArrayList<String>();
-//        for (int i = 0; i < values.length; ++i) {
-//            list.add(values[i]);
-//        }
-//
-//        offersListView = (ListView) findViewById(R.id.offersListView);
-//        final StableArrayAdapter adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-//        offersListView.setAdapter(adapter);
-//
-//        offersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, final View view,int position, long id) {
-//                Intent share = new Intent(Intent.ACTION_SEND);
-//                share.setType("text/plain");
-//                share.putExtra(Intent.EXTRA_TEXT, values[position]);
-//                startActivity(Intent.createChooser(share, "Title"));
-//            }
-//        });
-
     }
 
     private class StableArrayAdapter extends ArrayAdapter<String> {
