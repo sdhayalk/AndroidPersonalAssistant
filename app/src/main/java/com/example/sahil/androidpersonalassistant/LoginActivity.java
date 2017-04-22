@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
         prgDialog.setCancelable(false);
 
         sharedPreferences = getSharedPreferences("PreferencesToCheckIfLoggedIn", Context.MODE_PRIVATE);
-        username = sharedPreferences.getString("user_name", null);
+        username = sharedPreferences.getString("username", null);
         password = sharedPreferences.getString("password", null);
         keepLoggedIn=sharedPreferences.getBoolean("keepLoggedIn",false);
 
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
         if(keepLoggedIn){
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putString("user_name", username);
+            bundle.putString("username", username);
             bundle.putString("password", password);
             intent.putExtras(bundle);
             startActivity(intent);
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
                 public void onClick(View v) {
                     Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("user_name", usernameEditText.getText().toString());
+                    bundle.putString("username", usernameEditText.getText().toString());
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
@@ -158,13 +158,17 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
 
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("user_name", username_text );
-                bundle.putString("password", password_text );
+                bundle.putString("username", usernameEditText.getText().toString());
+                bundle.putString("password", passwordEditText.getText().toString());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("username",username_text);
+                editor.putString("password",password_text);
                 if(rememberMe.isChecked()){
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("keepLoggedIn",true);
-                    editor.commit();
                 }
+                else
+                    editor.putBoolean("keepLoggedIn",false);
+                editor.commit();
                 intent.putExtras(bundle);
                 startActivity(intent);
 
