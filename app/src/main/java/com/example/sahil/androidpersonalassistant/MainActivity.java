@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         /***********************LIST VIEW******************/
 
-        String[] values = new String[] { "OFFERS","RESTAURANTS","WEATHER","USER PREFERENCES", "WEATHER FORECAST"};
+        String[] values = new String[] { "OFFERS","RESTAURANTS","WEATHER","USER PREFERENCES"};
 
         final ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < values.length; ++i) {
@@ -137,14 +137,6 @@ public class MainActivity extends AppCompatActivity {
                     Bundle bundle = new Bundle();
                     bundle.putString("username", username);
                     bundle.putString("password", password);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-                else if(position==4){
-                    Intent intent = new Intent(MainActivity.this, WeatherForecastActivity.class);
-                    Bundle bundle = new Bundle();
-                    intent.putExtra("latitude", latitude);
-                    intent.putExtra("longitude", longitude);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }
