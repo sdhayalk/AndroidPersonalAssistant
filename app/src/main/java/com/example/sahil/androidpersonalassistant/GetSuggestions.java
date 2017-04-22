@@ -64,7 +64,8 @@ public class GetSuggestions implements OnRequestCompleted{
     {
         try {
             Log.d("ABCD", "YOYOYOY");
-            boolean request_success = Boolean.valueOf(Utility.jsonRecurseKeys(jsonResponse,"success"));
+            boolean request_success = jsonResponse.getBoolean("success");
+            String request_message = jsonResponse.getString("message");
             JSONObject data = (JSONObject) jsonResponse.get("data");
             JSONArray offers = data.getJSONArray("offers");
             JSONArray sale = data.getJSONArray("sale");
