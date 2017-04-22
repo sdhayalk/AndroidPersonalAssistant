@@ -38,6 +38,7 @@ public class InvokeServerAPI {
     static final String DEFAULT_URL = AWS_EC2_URL + "/users/login?user_name=dude_1&password=dude123";
     static final String USER_LOGIN_URL = AWS_EC2_URL + "/users/login?";
     static final String USER_REGISTERATION_URL = AWS_EC2_URL + "/users/registration?";
+    static final String GET_SUGGESTIONS_URL = AWS_EC2_URL + "/suggestions?";
 
 
 
@@ -60,6 +61,8 @@ public class InvokeServerAPI {
                 return USER_LOGIN_URL;
             case "users_register" :
                 return USER_REGISTERATION_URL;
+            case "get_suggestions":
+                return GET_SUGGESTIONS_URL;
             default :
                 return DEFAULT_URL;
         }

@@ -38,6 +38,13 @@ public class SuggestOfferActivity extends AppCompatActivity {
 
         offersListView = (ListView) findViewById(R.id.offersListView);
 
+        GetSuggestions getSuggestions = new GetSuggestions();
+        String query = String.format("%s&%s", "clothing", "shoes");
+        getSuggestions.getSuggestions(SuggestOfferActivity.this, query);
+
+
+
+
         shareMessage = "Message";
         shareButton = (Button) findViewById(R.id.shareButton);
         shareButton.setOnClickListener(new View.OnClickListener() {
