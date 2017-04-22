@@ -22,9 +22,8 @@
         <ListView
             android:id="@+id/offersListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView2"
-            android:layout_weight=".90" />
+            android:layout_height="wrap_content">
+        </ListView>
 
         <Button
             android:id="@+id/shareButton"

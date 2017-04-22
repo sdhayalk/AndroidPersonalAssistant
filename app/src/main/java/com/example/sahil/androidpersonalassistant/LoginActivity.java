@@ -90,8 +90,6 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
             continueButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
-
-
                     String username_text = usernameEditText.getText().toString();
                     String password_text = passwordEditText.getText().toString();
 

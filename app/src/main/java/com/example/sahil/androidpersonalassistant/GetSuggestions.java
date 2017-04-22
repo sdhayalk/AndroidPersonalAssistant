@@ -40,6 +40,9 @@ public class GetSuggestions implements OnRequestCompleted{
     Button registerButton;
     CheckBox rememberMe;
 
+    public String[] offerresults;
+    public String[] saleresults;
+
     ProgressDialog prgDialog;
     InvokeServerAPI invokeServerAPI;
     OnRequestCompleted onRequestCompleted;
@@ -69,8 +72,8 @@ public class GetSuggestions implements OnRequestCompleted{
             JSONObject data = (JSONObject) jsonResponse.get("data");
             JSONArray offers = data.getJSONArray("offers");
             JSONArray sale = data.getJSONArray("sale");
-            String[] offerresults = toStringArray(offers);
-            String[] saleresults = toStringArray(sale);
+            offerresults = toStringArray(offers);
+            saleresults = toStringArray(sale);
             if ( true )
             {
                 Log.d("ABCD", offerresults[5]);
@@ -95,6 +98,10 @@ public class GetSuggestions implements OnRequestCompleted{
             arr[i]=array.optString(i);
         }
         return arr;
+    }
+
+    public String[] returnResult()   {
+        return offerresults;
     }
 
 }
