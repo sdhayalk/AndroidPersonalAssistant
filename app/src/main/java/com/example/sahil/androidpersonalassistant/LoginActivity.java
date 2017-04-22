@@ -59,6 +59,10 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
         NotificationManager notificationmanager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationmanager.cancel(0);
 
+        prgDialog = new ProgressDialog(this);
+        prgDialog.setMessage("Please wait...");
+        prgDialog.setCancelable(false);
+
         sharedPreferences = getSharedPreferences("PreferencesToCheckIfLoggedIn", Context.MODE_PRIVATE);
         username = sharedPreferences.getString("user_name", null);
         password = sharedPreferences.getString("password", null);
@@ -86,13 +90,16 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
             continueButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 
+
+
                     String username_text = usernameEditText.getText().toString();
                     String password_text = passwordEditText.getText().toString();
 
                     RequestParams requestParams = new RequestParams();
-
-                    if(username == null && Utility.isNotNull(username_text) && Utility.isNotNull(password_text))
+//                    username == null && Utility.isNotNull(username_text) && Utility.isNotNull(password_text)
+                    if( Utility.isNotNull(username_text) && Utility.isNotNull(password_text))
                     {
+                        prgDialog.show();
 
                         requestParams.put("user_name", username_text);
                         requestParams.put("password", password_text);
@@ -138,6 +145,7 @@ public class LoginActivity extends AppCompatActivity implements OnRequestComplet
 
     void runOnCompletion(String stringResponse, JSONObject jsonResponse)
     {
+        prgDialog.hide();
         String username_text = usernameEditText.getText().toString();
         String password_text = passwordEditText.getText().toString();
 

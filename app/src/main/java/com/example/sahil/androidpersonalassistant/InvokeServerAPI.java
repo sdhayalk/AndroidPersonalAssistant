@@ -37,7 +37,7 @@ public class InvokeServerAPI {
     static final String AWS_EC2_URL = "http://ec2-52-36-128-208.us-west-2.compute.amazonaws.com";
     static final String DEFAULT_URL = AWS_EC2_URL + "/users/login?user_name=dude_1&password=dude123";
     static final String USER_LOGIN_URL = AWS_EC2_URL + "/users/login?";
-    static final String USER_REGISTERATION_URL = AWS_EC2_URL + "/users/registration?";
+    static final String USER_REGISTERATION_URL = AWS_EC2_URL + "/users/register?";
 
 
 
