@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     String username, password;
     Button signOutButton; // TODO: sahil to implement
     Button sendNotification;
-    Button trainButton;
     Button creditsButton;
     ListView listview;
     TextView weatherDataTextView;
@@ -184,39 +183,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        trainButton = (Button) findViewById(R.id.trainButton);
-        trainButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    EditText attr1EditText = (EditText) findViewById(R.id.attr1EditText);
-                    EditText attr2EditText = (EditText) findViewById(R.id.attr2EditText);
-                    double attr1 = Double.parseDouble(String.valueOf(attr1EditText.getText()));
-                    double attr2 = Double.parseDouble(String.valueOf(attr2EditText.getText()));
-
-                    ConverterUtils.DataSource locationDataset = new ConverterUtils.DataSource(FILE_PATH + File.separator + "location.csv");
-                    locationDataset.getDataSet(2);
-                    Instances instances = locationDataset.getDataSet();
-                    instances.setClassIndex(instances.numAttributes()-1);
-
-                    J48 j48 = new J48();
-                    j48.buildClassifier(instances);
-
-                    Instance testInstance = new DenseInstance(3);
-                    testInstance.setValue(0, attr1);
-                    testInstance.setValue(1, attr2);
-                    testInstance.setValue(2, -1);
-                    Instances testInstances = new Instances(instances);
-                    testInstances.setClassIndex(testInstances.numAttributes() - 1);
-                    testInstances.delete();
-                    testInstances.add(testInstance);
-
-                    double result = j48.classifyInstance(testInstances.instance(0));
-                    Log.d("Predicted City = ", instances.classAttribute().value((int)result)+"");
-
-                }catch (Exception e)    {e.printStackTrace();}
-            }
-        });
 
         creditsButton = (Button) findViewById(R.id.creditsButton);
         creditsButton.setOnClickListener(new View.OnClickListener() {

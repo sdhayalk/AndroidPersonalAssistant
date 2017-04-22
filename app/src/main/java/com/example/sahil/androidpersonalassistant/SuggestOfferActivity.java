@@ -4,8 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +49,6 @@ public class SuggestOfferActivity extends AppCompatActivity implements OnRequest
     Button shareButton;
     ListView offersListView;
     SharedPreferences sharedPreferences;
-    String username, password;
     boolean keepLoggedIn;
     EditText usernameEditText, passwordEditText;
     Button continueButton;
@@ -60,6 +65,16 @@ public class SuggestOfferActivity extends AppCompatActivity implements OnRequest
     static final String AWS_API_TAG =  "get_suggestions";
     static final String LOG_TAG = "GET_SUGGESTIONS";
 
+    Handler mHandler=new Handler();
+    int clothing, footwear, accessories, books, movies, music, electronics, software;
+    final ArrayList<String> list_pref = new ArrayList<String>();
+    String username, password;
+    SQLiteDatabase db;
+    public String TABLE = "Preferences";
+    public  StringBuilder DATABASE_NAME=new StringBuilder("");
+    public  final String FILE_PATH_DB = Environment.getExternalStorageDirectory() + File.separator + "Mydata";
+    public  StringBuilder DATABASE_LOCATION = new StringBuilder(FILE_PATH_DB + File.separator) ;
+
     @Override
     public void taskCompleted(String stringResponse, JSONObject jsonResponse)    {
         runOnCompletion(stringResponse, jsonResponse);
@@ -69,10 +84,29 @@ public class SuggestOfferActivity extends AppCompatActivity implements OnRequest
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suggest_offer);
-
+        Bundle bundle = getIntent().getExtras();
+        try {
+            username = bundle.getString("username");
+            password = bundle.getString("password");
+        }catch(Exception e) {
+            Toast.makeText(this, "Cannot get username and password", Toast.LENGTH_SHORT).show();
+        }
+        DATABASE_NAME.append(username);
+        DATABASE_LOCATION.append(DATABASE_NAME.toString());
         offersListView = (ListView) findViewById(R.id.offersListView);
+        createListArray();
 
-        String query = String.format("%s&%s", "clothing", "shoes");
+        Log.d("list pref", list_pref.size()+"");
+        StringBuilder sb = new StringBuilder();
+        for(int k=0 ; k<list_pref.size()-1 ; k++) {
+            sb.append(list_pref.get(k));
+            sb.append("&");
+        }
+        sb.append(list_pref.get(list_pref.size()-1));
+
+//        String query = String.format("%s&%s", "clothing", "shoes");
+        String query = sb.toString();
+        Log.d("query = ", query);
         getSuggestions(SuggestOfferActivity.this, query);
 
     }
@@ -166,5 +200,76 @@ public class SuggestOfferActivity extends AppCompatActivity implements OnRequest
 
     public String[] returnResult()   {
         return offerresults;
+    }
+
+    public void createListArray() {
+        try {
+            try {
+                File folder = new File(FILE_PATH_DB);
+                if (!folder.exists())
+                    folder.mkdir();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            File folder = new File(FILE_PATH_DB);
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+
+            db = SQLiteDatabase.openOrCreateDatabase(DATABASE_LOCATION.toString(), null);
+            //perform your database operations here ...
+            db.beginTransaction();
+            Cursor c = db.rawQuery("select *  from tbl_" + TABLE, null);
+            if (c.moveToFirst()) {
+                do {
+                    clothing = c.getInt(0);
+                    footwear = c.getInt(1);
+                    accessories = c.getInt(2);
+                    books = c.getInt(3);
+                    movies = c.getInt(4);
+                    music = c.getInt(5);
+                    electronics = c.getInt(6);
+                    software = c.getInt(7);
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.setTransactionSuccessful(); //commit your changes
+            int i = 0;
+            if (clothing == 1)
+                list_pref.add("clothing");
+
+            if (footwear == 1)
+                list_pref.add("footwear");
+
+            if (accessories == 1)
+                list_pref.add("accessories");
+
+            if (books == 1)
+                list_pref.add("books");
+
+            if (movies == 1)
+                list_pref.add("movies");
+
+            if (music == 1)
+                list_pref.add("music");
+
+            if (electronics == 1)
+                list_pref.add("electronics");
+
+            if (software == 1)
+                list_pref.add("software");
+        } catch (SQLiteException e) { // can't toast from a service
+            final SQLiteException ee = e;
+            mHandler.post(new Runnable() {
+                public void run() {
+                    Toast.makeText(SuggestOfferActivity.this, "ERROR DB select" + ee.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (Exception e) {
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
     }
 }
